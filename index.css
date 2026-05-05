@@ -1,0 +1,344 @@
+/* index.css */
+
+/* =============================================================
+   DESIGN SYSTEM — CSS Custom Properties (Variables)
+   ---------------------------------------------------------
+   ACCESSIBILITY NOTE:
+   --main-text (#F0F0F0) on --primary-bg (#006666) achieves a
+   contrast ratio of 5.95:1, exceeding the WCAG AA standard of
+   4.5:1 for normal text and 3:1 for large text.
+   ============================================================= */
+:root {
+  --primary-bg: #006666;       /* Dark Teal — main background */
+  --main-text: #F0F0F0;        /* Off-White — body text */
+  --accent-winter: #A2D2FF;    /* Sky Mist Blue — primary accent */
+  --accent-highlight: #EF9D71; /* Soft Orange — secondary accent */
+  --border-color: #4B5332;     /* Shale Green — borders and dividers */
+
+  /* Gradient stops for body background */
+  --grad-start: #004d4d;
+  --grad-end: #005252;
+
+  /* Muted texts */
+  --text-muted: rgba(240, 240, 240, 0.7);
+  --text-muted-heavy: rgba(240, 240, 240, 0.45);
+
+  /* Hovers & Glows */
+  --login-hover-bg: rgba(239, 157, 113, 0.15); /* Transparent Orange */
+  --register-glow: rgba(162, 210, 255, 0.35); /* Blue Glow */
+  
+  /* Disabled Button */
+  --btn-disabled-bg: rgba(162, 210, 255, 0.3);
+  --btn-disabled-text: rgba(240, 240, 240, 0.5);
+
+  --focus-ring: rgba(162, 210, 255, 0.25); /* Blue focus */
+
+  /* Derived tokens for glassmorphism layers */
+  --glass-bg: rgba(0, 102, 102, 0.35);
+  --glass-border: rgba(162, 210, 255, 0.2);
+}
+
+[data-theme="summer"] {
+  --primary-bg: #F0F0F0;       /* Off-White becomes background */
+  --main-text: #006666;        /* Teal becomes foreground */
+  --accent-winter: #EF9D71;    /* Orange replaces blue */
+  --accent-highlight: #A2D2FF; /* Blue replaces orange */
+  --border-color: #4B5332;     /* Shale Green remains the same */
+
+  /* Gradient stops for off-white background */
+  --grad-start: #e8e8e8;
+  --grad-end: #e0e0e0;
+
+  /* Muted texts */
+  --text-muted: rgba(0, 102, 102, 0.7);
+  --text-muted-heavy: rgba(0, 102, 102, 0.45);
+
+  /* Hovers & Glows */
+  --login-hover-bg: rgba(162, 210, 255, 0.15); /* Transparent Blue */
+  --register-glow: rgba(239, 157, 113, 0.35); /* Orange Glow */
+
+  /* Disabled Button */
+  --btn-disabled-bg: rgba(239, 157, 113, 0.3);
+  --btn-disabled-text: rgba(0, 102, 102, 0.5);
+
+  --focus-ring: rgba(239, 157, 113, 0.25); /* Orange focus */
+
+  /* Light glass layer for dark text */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 102, 102, 0.2);
+}
+
+/* ── Reset ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Base ──
+   Background uses --primary-bg; text uses --main-text for
+   the validated 5.95:1 contrast ratio. */
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(160deg, var(--grad-start) 0%, var(--primary-bg) 50%, var(--grad-end) 100%);
+  color: var(--main-text);
+  min-height: 100vh;
+  padding-top: 80px; /* Space for the fixed navbar */
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ── Navbar ──
+   Slightly darker teal with a glass blur so the page background
+   shows through, reinforcing cohesion across all pages. */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  /* Glassmorphism: semi-transparent teal + blur */
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1001;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Hamburger ──
+   Icon color matches --main-text for visibility on dark navbar. */
+.hamburger {
+  font-size: 24px;
+  /* Uses --main-text so it's readable on the teal glass navbar */
+  color: var(--main-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.hamburger:hover {
+  /* --accent-highlight orange on hover for warm contrast */
+  background-color: rgba(239, 157, 113, 0.2);
+  color: var(--accent-highlight);
+}
+
+/* ── Logo ── */
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 20px;
+  /* --main-text keeps it legible on the teal navbar */
+  color: var(--main-text);
+  letter-spacing: 0.5px;
+}
+
+/* Logo anchor wrapper — visually invisible, just adds clickability */
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.logo-link:hover {
+  opacity: 0.8;
+}
+
+/* ── Navbar Right (Login / Register buttons) ── */
+.navbar-right {
+  margin-left: auto;
+  display: flex;
+  gap: 15px;
+}
+
+/* Login button — ghost style */
+.nav-btn {
+  text-decoration: none;
+  color: var(--main-text);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.nav-btn:hover {
+  background-color: var(--login-hover-bg);
+  border-color: var(--accent-highlight);
+  color: var(--accent-highlight);
+}
+
+/* Register button — filled */
+.nav-btn.primary {
+  background-color: var(--accent-winter);
+  color: #F0F0F0;
+  border-color: var(--accent-winter);
+  font-weight: 600;
+}
+
+.nav-btn.primary:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--register-glow);
+}
+
+/* ── Sidebar ──
+   Matches the teal palette so it feels part of the same design. */
+.sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1002;
+  top: 0;
+  left: -250px; /* Hidden by default */
+  background: linear-gradient(180deg, var(--grad-start) 0%, var(--primary-bg) 100%);
+  border-right: 1px solid var(--border-color);
+  overflow-x: hidden;
+  transition: left 0.3s ease;
+  padding-top: 10px;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar.active {
+  left: 0; /* Slide in */
+}
+
+.sidebar-header {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Close button — contrasted against the dark sidebar */
+.close-btn {
+  font-size: 30px;
+  color: var(--main-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  transition: background 0.3s, color 0.3s;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  background-color: rgba(239, 157, 113, 0.2);
+  color: var(--accent-highlight);
+}
+
+/* Sidebar links — --main-text on dark teal satisfies contrast */
+.sidebar a {
+  padding: 12px 25px;
+  text-decoration: none;
+  font-size: 15px;
+  color: var(--main-text);
+  display: block;
+  border-left: 3px solid transparent;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: rgba(162, 210, 255, 0.1);
+  border-left-color: var(--accent-winter);
+  color: var(--accent-winter);
+}
+
+.sidebar hr {
+  margin: 10px 0;
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ── Main Content / Hero ── */
+.content {
+  padding: 60px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Hero card — glassmorphism card on the teal background */
+.hero-card {
+  width: 100%;
+  max-width: 600px;
+  padding: 50px 40px;
+  /* Glass card: semi-transparent teal layer */
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+/* h2 inside hero card — --main-text on glass-teal card */
+h2 {
+  margin-bottom: 16px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--main-text);
+}
+
+.hero-card p {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Validation Styles ── */
+.error-message {
+  color: var(--accent-highlight);
+  font-size: 11px;
+  margin-top: 4px;
+  display: none;
+  text-align: left;
+}
+
+input.invalid {
+  border-color: var(--accent-highlight) !important;
+  box-shadow: 0 0 0 2px var(--register-glow) !important;
+}
+
+/* Disabled Submit Button State */
+.submit-btn:disabled {
+  background-color: var(--btn-disabled-bg);
+  color: var(--btn-disabled-text);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* ── Futuristic Scrollbar Styling ── */
+/* Target Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px; /* Slightly reduced width */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--accent-winter); /* The blue color for background */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--grad-start); /* The shale green color for the thumb */
+  border-radius: 10px;
+  border: 2px solid var(--accent-winter); /* Floating effect */
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-highlight); /* Subtle interaction change */
+}
+

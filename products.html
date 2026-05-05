@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — Clothes Store</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="products.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="common.js" defer></script>
+  <script src="products.js" defer></script>
+</head>
+<body class="products-page">
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
+    <a href="index.html" class="logo-link"><h1 class="logo">Clothes Store</h1></a>
+    <div class="navbar-right">
+      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 480, 550)">Login</a>
+      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 550, 750)">Register</a>
+    </div>
+  </nav>
+
+  <!-- ── Page Layout: Permanent Sidebar + Main Content ── -->
+  <div class="page-layout">
+
+    <!-- ── Permanent Sidebar (desktop only) ── -->
+    <aside id="sidebar" class="sidebar products-sidebar">
+      <div class="sidebar-header">
+        <button class="close-btn mobile-only" aria-label="Close menu" onclick="toggleSidebar()">&times;</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="#categories">Categories</a>
+        <a href="#about">About Us</a>
+      </nav>
+    </aside>
+
+    <!-- ── Right Side: Header + Filters + Grid ── -->
+    <div class="products-main">
+
+  <!-- ── Page Header ── -->
+  <header class="products-header">
+    <h1>Our Collection</h1>
+    <p>Discover the latest seasonal styles — from winter warmth to summer breezes.</p>
+  </header>
+
+  <!-- ── Filter Bar ── -->
+  <nav class="filter-bar" id="filter-bar" aria-label="Product filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="Winter">Winter</button>
+    <button class="filter-btn" data-filter="Summer">Summer</button>
+    <button class="filter-btn" data-filter="Coats">Coats</button>
+    <button class="filter-btn" data-filter="Tops">Tops</button>
+    <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
+    <button class="filter-btn" data-filter="Accessories">Accessories</button>
+    <button class="filter-btn" data-filter="Dresses">Dresses</button>
+  </nav>
+
+    <!-- ── Products Grid ── populated by JS from data.json ── -->
+      <main class="products-grid" id="products-grid">
+        <!-- Cards are injected here by products.js -->
+      </main>
+
+    </div><!-- /.products-main -->
+  </div><!-- /.page-layout -->
+
+</body>
+</html>

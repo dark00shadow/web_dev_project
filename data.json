@@ -1,0 +1,104 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Arctic Expedition Parka",
+      "category": "Coats",
+      "price": 185.00,
+      "season": "Winter",
+      "stock": 0,
+      "image": "winter_parka.jpg",
+      "description": "Heavy-duty insulated parka for extreme cold."
+    },
+    {
+      "id": 2,
+      "name": "Alpine Wool Sweater",
+      "category": "Tops",
+      "price": 75.00,
+      "season": "Winter",
+      "stock": 12,
+      "image": "wool_sweater.jpg",
+      "description": "100% Merino wool for natural warmth."
+    },
+    {
+      "id": 3,
+      "name": "Corduroy Winter Trousers",
+      "category": "Bottoms",
+      "price": 65.00,
+      "season": "Winter",
+      "stock": 14,
+      "image": "winter_pants.jpg",
+      "description": "Thick-ribbed corduroy for heat retention."
+    },
+    {
+      "id": 4,
+      "name": "Snow-Peak Gloves",
+      "category": "Accessories",
+      "price": 35.00,
+      "season": "Winter",
+      "stock": 10,
+      "image": "gloves.jpg",
+      "description": "Touchscreen-compatible insulated gloves."
+    },
+    {
+      "id": 5,
+      "name": "Oversized Knit Cardigan",
+      "category": "Tops",
+      "price": 90.00,
+      "season": "Winter",
+      "stock": 3,
+      "image": "cardigan.jpg",
+      "description": "Chunk-knit cardigan with wood buttons."
+    },
+    {
+      "id": 6,
+      "name": "Azure Linen Shirt",
+      "category": "Tops",
+      "price": 55.00,
+      "season": "Summer",
+      "stock": 20,
+      "image": "linen_shirt.jpg",
+      "description": "Breathable linen for hot summer days."
+    },
+    {
+      "id": 7,
+      "name": "Sunset Boardwalk Shorts",
+      "category": "Bottoms",
+      "price": 45.00,
+      "season": "Summer",
+      "stock": 12,
+      "image": "shorts.jpg",
+      "description": "Quick-dry fabric perfect for the beach."
+    },
+    {
+      "id": 8,
+      "name": "Tropical Print Dress",
+      "category": "Dresses",
+      "price": 85.00,
+      "season": "Summer",
+      "stock": 10,
+      "image": "summer_dress.jpg",
+      "description": "Lightweight floral print summer dress."
+    },
+    {
+      "id": 9,
+      "name": "Silk Breezeway Skirt",
+      "category": "Bottoms",
+      "price": 70.00,
+      "season": "Summer",
+      "stock": 10,
+      "image": "summer_skirt.jpg",
+      "description": "Flowing silk skirt for maximum ventilation."
+    },
+    {
+      "id": 10,
+      "name": "Sahara Straw Hat",
+      "category": "Accessories",
+      "price": 30.00,
+      "season": "Summer",
+      "stock": 15,
+      "image": "straw_hat.jpg",
+      "description": "Wide-brimmed straw hat for UV protection."
+    }
+  ]
+}

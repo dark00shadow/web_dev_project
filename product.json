@@ -1,0 +1,160 @@
+{
+  "products": [
+    {
+      "id": "C01",
+      "name": "Heavy Winter Parka",
+      "category": "coat",
+      "price": 150.00,
+      "season": "Winter",
+      "image": "coat_winter.jpg",
+      "description": "Insulated waterproof coat for extreme cold."
+    },
+    {
+      "id": "C02",
+      "name": "Heavy Winter Parka",
+      "category": "coat",
+      "price": 150.00,
+      "season": "Winter",
+      "image": "coat_winter.jpg",
+      "description": "Insulated waterproof coat for extreme cold."
+    },
+    {
+      "id": "C03",
+      "name": "Heavy Winter Parka",
+      "category": "coat",
+      "price": 150.00,
+      "season": "Winter",
+      "image": "coat_winter.jpg",
+      "description": "Insulated waterproof coat for extreme cold."
+    },
+    {
+      "id": "C04",
+      "name": "Heavy Winter Coat",
+      "category": "coat",
+      "price": 180.00,
+      "season": "Winter",
+      "image": "coat_winter.jpg",
+      "description": "Insulated waterproof coat for extreme cold."
+    },
+    {
+      "id": "C05",
+      "name": "Heavy Winter Coat",
+      "category": "coat",
+      "price": 180.00,
+      "season": "Winter",
+      "image": "coat_winter.jpg",
+      "description": "Insulated waterproof coat for extreme cold."
+    },
+    {
+      "id": "C06",
+      "name": "Heavy Winter Coat",
+      "category": "coat",
+      "price": 180.00,
+      "season": "Winter",
+      "image": "coat_winter.jpg",
+      "description": "Insulated waterproof coat for extreme cold."
+    },
+
+    {
+      "id": "SH01",
+      "name": "Classic Oxford Shirt",
+      "category": "shirt",
+      "price": 45.00,
+      "season": "Winter",
+      "image": "shirt_long.jpg",
+      "description": "Formal long-sleeved shirt in high-quality cotton."
+    },
+    {
+      "id": "SH02",
+      "name": "Classic Oxford Shirt",
+      "category": "shirt",
+      "price": 45.00,
+      "season": "Winter",
+      "image": "shirt_long.jpg",
+      "description": "Formal long-sleeved shirt in high-quality cotton."
+    },
+    {
+      "id": "SH03",
+      "name": "Classic Oxford Shirt",
+      "category": "shirt",
+      "price": 45.00,
+      "season": "Winter",
+      "image": "shirt_long.jpg",
+      "description": "Formal long-sleeved shirt in high-quality cotton."
+    },
+    {
+      "id": "SH04",
+      "name": "Classic Shirt",
+      "category": "shirt",
+      "price": 40.00,
+      "season": "Winter",
+      "image": "shirt_long.jpg",
+      "description": "Formal long-sleeved shirt in high-quality cotton."
+    },
+    {
+      "id": "SH05",
+      "name": "Classic Shirt",
+      "category": "shirt",
+      "price": 40.00,
+      "season": "Winter",
+      "image": "shirt_long.jpg",
+      "description": "Formal long-sleeved shirt in high-quality cotton."
+    },
+    {
+      "id": "SH06",
+      "name": "Classic Shirt",
+      "category": "shirt",
+      "price": 40.00,
+      "season": "Winter",
+      "image": "shirt_long.jpg",
+      "description": "Formal long-sleeved shirt in high-quality cotton."
+    },
+
+
+    {
+      "id": "TS01",
+      "name": "Graphic Summer Tee",
+      "category": "T-shirt",
+      "price": 25.00,
+      "season": "Summer",
+      "image": "tshirt_summer.jpg",
+      "description": "Breathable cotton T-shirt with a modern print."
+    },
+    {
+      "id": "P01",
+      "name": "Slim-Fit Chinos",
+      "category": "pants",
+      "price": 60.00,
+      "season": "All",
+      "image": "pants_all.jpg",
+      "description": "Versatile pants suitable for any occasion."
+    },
+    {
+      "id": "SU01",
+      "name": "Midnight Slim Suit",
+      "category": "suit",
+      "price": 250.00,
+      "season": "Winter",
+      "image": "suit_formal.jpg",
+      "description": "Two-piece wool blend suit for formal events."
+    },
+    {
+      "id": "D01",
+      "name": "Floral Sun Dress",
+      "category": "dresse",
+      "price": 75.00,
+      "season": "Summer",
+      "image": "dress_summer.jpg",
+      "description": "Lightweight flowing dress for sunny days."
+    },
+    {
+      "id": "SP01",
+      "name": "Aero-Dry Tracksuit",
+      "category": "sport",
+      "price": 90.00,
+      "season": "All",
+      "image": "sport_gear.jpg",
+      "description": "High-performance moisture-wicking sportswear."
+    }
+  ]
+}

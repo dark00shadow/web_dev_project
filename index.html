@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothes Store</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="common.js" defer></script>
+  </head>
+
+  <body>
+    <!-- Navbar with Hamburger Button -->
+    <nav class="navbar">
+      <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
+      <a href="index.html" class="logo-link"><h1 class="logo">Clothes Store</h1></a>
+      <div class="navbar-right">
+        <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 480, 550)">Login</a>
+        <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 550, 750)">Register</a>
+      </div>
+    </nav>
+
+    <!-- Sliding Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <button class="close-btn" aria-label="Close menu" onclick="toggleSidebar()">&times;</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#home">Home</a>
+        <a href="products.html">Products</a>
+        <a href="#categories">Categories</a>
+        <a href="#about">About Us</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <section class="hero-card">
+        <h2>Welcome to our Store</h2>
+        <p>Explore the latest trends in fashion.</p>
+      </section>
+    </main>
+  </body>
+</html>
