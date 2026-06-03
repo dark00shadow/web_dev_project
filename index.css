@@ -36,6 +36,7 @@
   /* Derived tokens for glassmorphism layers */
   --glass-bg: rgba(0, 102, 102, 0.35);
   --glass-border: rgba(162, 210, 255, 0.2);
+  --accent-winter-soft: rgba(162, 210, 255, 0.15);
 }
 
 [data-theme="summer"] {
@@ -66,6 +67,7 @@
   /* Light glass layer for dark text */
   --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(0, 102, 102, 0.2);
+  --accent-winter-soft: rgba(239, 157, 113, 0.15);
 }
 
 /* ── Reset ── */
@@ -75,16 +77,45 @@
   padding: 0;
 }
 
+/* ── Theme Transition ──
+   Smoothly animates background colors, text colors, borders, and glass effects
+   when switching between Winter and Summer themes. */
+body, 
+.sidebar, 
+.product-card, 
+.filter-btn,
+.dropdown-btn,
+.filter-item,
+button, 
+h1, h2, h3, h4, p, span, a { 
+  transition: background 1s ease-in-out, 
+              background-color 1s ease-in-out, 
+              color 1s ease-in-out, 
+              border-color 1s ease-in-out, 
+              backdrop-filter 1s ease-in-out,
+              box-shadow 1s ease-in-out; 
+}
+
+/* Navbar transition timing (Reference speed) */
+.navbar {
+  transition: background 0.4s ease-in-out, 
+              background-color 0.4s ease-in-out, 
+              color 0.4s ease-in-out, 
+              border-color 0.4s ease-in-out, 
+              backdrop-filter 0.4s ease-in-out,
+              box-shadow 0.4s ease-in-out;
+}
+
 /* ── Base ──
    Background uses --primary-bg; text uses --main-text for
    the validated 5.95:1 contrast ratio. */
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(160deg, var(--grad-start) 0%, var(--primary-bg) 50%, var(--grad-end) 100%);
+  background-attachment: fixed; /* Fixes background color breaking on scroll */
   color: var(--main-text);
   min-height: 100vh;
   padding-top: 80px; /* Space for the fixed navbar */
-  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ── Navbar ──
@@ -152,11 +183,122 @@ body {
   opacity: 0.8;
 }
 
+/* ── Navbar Search Bar ── */
+.navbar-search {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 320px;
+  z-index: 1002;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2px 6px 2px 14px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-form:focus-within {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--accent-winter);
+  box-shadow: 0 0 10px var(--focus-ring);
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--main-text);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 6px 0;
+  width: 100%;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted-heavy);
+  opacity: 0.8;
+}
+
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-decoration,
+.search-input::-webkit-search-results-button,
+.search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  color: var(--main-text);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.search-btn:hover {
+  color: var(--accent-winter);
+  background-color: rgba(162, 210, 255, 0.1);
+}
+
+.search-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.search-btn:hover .search-icon {
+  opacity: 1;
+}
+
 /* ── Navbar Right (Login / Register buttons) ── */
 .navbar-right {
   margin-left: auto;
   display: flex;
   gap: 15px;
+}
+
+/* ── Search Bar Responsive Queries ── */
+@media (max-width: 768px) {
+  .navbar-search {
+    position: static;
+    transform: none;
+    max-width: 200px;
+    margin: 0 10px;
+    flex: 1;
+  }
+  .logo {
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  .navbar-right {
+    gap: 8px;
+  }
+  .nav-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-link {
+    display: none;
+  }
 }
 
 /* Login button — ghost style */
@@ -264,36 +406,318 @@ body {
 .content {
   padding: 60px 40px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.landing-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+}
+
+.hero-layout {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
   justify-content: center;
+  gap: 40px;
 }
 
 /* Hero card — glassmorphism card on the teal background */
 .hero-card {
-  width: 100%;
-  max-width: 600px;
-  padding: 50px 40px;
+  flex: 1; /* Takes up 1 part */
+  max-width: 500px;
+  padding: 40px 32px;
   /* Glass card: semi-transparent teal layer */
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   text-align: center;
+  display: grid;
+  place-items: center;
+  transition: background 1s, border-color 1s;
+  overflow: hidden;
+}
+
+.hero-card h2 {
+  font-size: 32px;
+  margin-bottom: 16px;
+  color: var(--main-text);
+}
+
+.hero-card p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Seasonal Content Visibility */
+.winter-content,
+.summer-content {
+  grid-area: 1 / 1; /* Stack them in the same grid cell */
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  width: 100%;
+}
+
+/* Winter state (Default) */
+.winter-content {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.summer-content {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+}
+
+/* Summer state overrides */
+[data-theme="summer"] .winter-content {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
+}
+
+[data-theme="summer"] .summer-content {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ── Seasonal Vertical Image ── */
+.seasonal-vertical-image {
+  flex: 1.8; /* Takes up 1.8 parts — larger than the text box */
+  max-width: 700px;
+  height: 450px;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+}
+
+.seasonal-vertical-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 1s ease-in-out;
+  opacity: 0;
+}
+
+/* Winter theme logic */
+body:not([data-theme="summer"]) .seasonal-vertical-image .winter-img {
+  opacity: 1;
+}
+
+/* Summer theme logic */
+[data-theme="summer"] .seasonal-vertical-image .summer-img {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .hero-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  .seasonal-vertical-image {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+  }
+}
+
+/* ── Seasonal Slider Section ── */
+.seasonal-slider-section {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.seasonal-slider-section h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--main-text);
+  margin-bottom: 24px;
+  text-align: left;
+  letter-spacing: 0.5px;
+}
+
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0 30px;
+  /* Add a fade effect to the edges */
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* ── Slider Navigation Arrows ── */
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  color: var(--main-text);
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.2s, color 0.2s, transform 0.2s ease;
+  pointer-events: auto;
+}
+
+.slider-wrapper:hover .slider-arrow {
+  opacity: 1;
+}
+
+.slider-arrow:hover {
+  background-color: var(--accent-winter);
+  color: #1a1a1a;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slider-arrow.left {
+  left: 10px;
+}
+
+.slider-arrow.right {
+  right: 10px;
+}
+
+.product-slider {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  /* Hide scrollbar for seamless running effect */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.product-slider::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Slider Product Card (mini version of product.css card) */
+.slider-card {
+  flex: 0 0 240px; /* Fixed width for slider cards */
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.slider-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-winter);
+}
+
+.slider-card-image {
+  width: 100%;
+  height: 160px;
+  background: rgba(162, 210, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.slider-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slider-card-body {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.slider-card-category {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent-winter);
+  text-transform: uppercase;
+}
+
+.slider-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--main-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slider-card-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--main-text);
+  margin-top: 5px;
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 40px 20px;
+  }
+  
+  .seasonal-slider-section h3 {
+    font-size: 20px;
+  }
+  
+  .slider-card {
+    flex: 0 0 180px;
+  }
+  
+  .slider-card-image {
+    height: 120px;
+  }
 }
 
 /* h2 inside hero card — --main-text on glass-teal card */
 h2 {
-  margin-bottom: 16px;
-  font-size: 28px;
+  margin-bottom: 12px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--main-text);
 }
 
 .hero-card p {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* ── Validation Styles ── */
@@ -323,7 +747,7 @@ input.invalid {
 /* ── Futuristic Scrollbar Styling ── */
 /* Target Webkit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: 8px; /* Slightly reduced width */
+  width: 12px; /* Increased width to 12px */
 }
 
 ::-webkit-scrollbar-track {

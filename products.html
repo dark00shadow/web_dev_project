@@ -6,6 +6,7 @@
   <title>Products — Clothes Store</title>
   <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="products.css">
+  <script src="theme.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,9 +19,20 @@
   <nav class="navbar">
     <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
     <a href="index.html" class="logo-link"><h1 class="logo">Clothes Store</h1></a>
+    <div class="navbar-search">
+      <form class="search-form" action="products.html" method="GET">
+        <input type="search" name="search" class="search-input" id="navbar-search-input" placeholder="Search clothes..." aria-label="Search clothes">
+        <button type="submit" class="search-btn" aria-label="Search">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
     <div class="navbar-right">
-      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 480, 550)">Login</a>
-      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 550, 750)">Register</a>
+      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 520, 800)">Login</a>
+      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 520, 800)">Register</a>
     </div>
   </nav>
 
@@ -34,8 +46,80 @@
       </div>
       <nav class="sidebar-nav">
         <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
-        <a href="#categories">Categories</a>
+        <a href="products.html" class="active">Products</a>
+        
+        <!-- ── Sidebar Filters (Persistent Container, Nested Dropdowns) ── -->
+        <div class="sidebar-filters-section" id="filters-main">
+          <div class="filter-header">
+            <h3 class="filter-section-title">Filters</h3>
+            <button class="reset-filters-btn" id="reset-filters" aria-label="Reset all filters">Reset</button>
+          </div>
+          
+          <!-- Season Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('season-content')">
+              Season <span class="arrow">▼</span>
+            </button>
+            <div id="season-content" class="dropdown-content">
+              <div class="filter-list" id="season-filter-list">
+                <button class="filter-item active" data-season="all">All Seasons</button>
+                <button class="filter-item" data-season="Winter">Winter</button>
+                <button class="filter-item" data-season="Summer">Summer</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Categories Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('categories-content')">
+              Categories <span class="arrow">▼</span>
+            </button>
+            <div id="categories-content" class="dropdown-content">
+              <div class="filter-list" id="category-filter-list">
+                <button class="filter-item" data-category="Coats">Coats</button>
+                <button class="filter-item" data-category="Tops">Tops</button>
+                <button class="filter-item" data-category="Shirts">Shirts</button>
+                <button class="filter-item" data-category="T-Shirts">T-Shirts</button>
+                <button class="filter-item" data-category="Bottoms">Bottoms</button>
+                <button class="filter-item" data-category="Dresses">Dresses</button>
+                <button class="filter-item" data-category="Accessories">Accessories</button>
+                <button class="filter-item" data-category="Sportswear">Sportswear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gender Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('gender-content')">
+              Gender <span class="arrow">▼</span>
+            </button>
+            <div id="gender-content" class="dropdown-content">
+              <div class="filter-list" id="gender-filter-list">
+                <button class="filter-item" data-gender="male">Male</button>
+                <button class="filter-item" data-gender="female">Female</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price Range Filter (Numeric Inputs) -->
+          <div class="filter-group indented">
+            <h4 class="filter-group-title">Price Range</h4>
+            <div class="price-filter-container">
+              <div class="price-inputs">
+                <div class="input-wrap">
+                  <span>$</span>
+                  <input type="number" id="price-min" placeholder="Min" min="0" value="0" step="10">
+                </div>
+                <span class="separator">-</span>
+                <div class="input-wrap">
+                  <span>$</span>
+                  <input type="number" id="price-max" placeholder="Max" min="0" value="500" step="10">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <a href="#about">About Us</a>
       </nav>
     </aside>
@@ -56,18 +140,52 @@
     <button class="filter-btn" data-filter="Summer">Summer</button>
     <button class="filter-btn" data-filter="Coats">Coats</button>
     <button class="filter-btn" data-filter="Tops">Tops</button>
+    <button class="filter-btn" data-filter="Shirts">Shirts</button>
+    <button class="filter-btn" data-filter="T-Shirts">T-Shirts</button>
     <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
-    <button class="filter-btn" data-filter="Accessories">Accessories</button>
     <button class="filter-btn" data-filter="Dresses">Dresses</button>
+    <button class="filter-btn" data-filter="Accessories">Accessories</button>
+    <button class="filter-btn" data-filter="Sportswear">Sportswear</button>
   </nav>
 
-    <!-- ── Products Grid ── populated by JS from data.json ── -->
+    <!-- ── Products Grid ── populated by JS from product.json ── -->
       <main class="products-grid" id="products-grid">
         <!-- Cards are injected here by products.js -->
       </main>
 
     </div><!-- /.products-main -->
   </div><!-- /.page-layout -->
+
+  <!-- Add to Cart Confirmation Modal -->
+  <div id="cart-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card">
+      <header class="modal-header">
+        <h3>Add to Cart</h3>
+        <button class="modal-close-btn" onclick="closeCartModal()">&times;</button>
+      </header>
+      <div class="modal-body">
+        <p class="modal-product-name" id="modal-product-name">Product Name</p>
+        <p class="modal-product-price" id="modal-product-price">$0.00</p>
+        
+        <form id="cart-confirm-form" onsubmit="confirmAddToCart(event)">
+          <div class="form-group">
+            <label for="quantity-input">Quantity</label>
+            <div class="quantity-selector">
+              <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
+              <input type="number" id="quantity-input" name="quantity" min="1" value="1" required>
+              <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
+            </div>
+            <span class="qty-stock-hint" id="qty-stock-hint">Available stock: 10</span>
+            <span class="qty-error" id="qty-error"></span>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="closeCartModal()">Cancel</button>
+            <button type="submit" class="btn-primary" id="confirm-btn">Confirm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
