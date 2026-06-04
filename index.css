@@ -83,6 +83,9 @@
 body, 
 .sidebar, 
 .product-card, 
+.hero-card,
+.slider-card,
+.nav-btn,
 .filter-btn,
 .dropdown-btn,
 .filter-item,
@@ -93,7 +96,8 @@ h1, h2, h3, h4, p, span, a {
               color 1s ease-in-out, 
               border-color 1s ease-in-out, 
               backdrop-filter 1s ease-in-out,
-              box-shadow 1s ease-in-out; 
+              box-shadow 1s ease-in-out,
+              opacity 1s ease-in-out; 
 }
 
 /* Navbar transition timing (Reference speed) */
@@ -103,7 +107,8 @@ h1, h2, h3, h4, p, span, a {
               color 0.4s ease-in-out, 
               border-color 0.4s ease-in-out, 
               backdrop-filter 0.4s ease-in-out,
-              box-shadow 0.4s ease-in-out;
+              box-shadow 0.4s ease-in-out,
+              opacity 0.4s ease-in-out;
 }
 
 /* ── Base ──
@@ -270,7 +275,76 @@ body {
 .navbar-right {
   margin-left: auto;
   display: flex;
+  align-items: center;
   gap: 15px;
+}
+
+/* ── Theme Toggle Button (Flipping Icon) ── */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  perspective: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+  outline: none;
+}
+
+.theme-toggle-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+/* Flip state */
+.theme-toggle-btn.flipped .theme-toggle-inner {
+  transform: rotateY(180deg);
+}
+
+.theme-toggle-front,
+.theme-toggle-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.theme-toggle-front {
+  z-index: 2;
+  /* Sun icon visible in winter theme (dark) */
+}
+
+.theme-toggle-back {
+  transform: rotateY(180deg);
+  /* Snowflake icon visible in summer theme (light) */
+}
+
+.theme-toggle-btn:hover .theme-toggle-front,
+.theme-toggle-btn:hover .theme-toggle-back {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="summer"] .theme-toggle-btn:hover .theme-toggle-front,
+[data-theme="summer"] .theme-toggle-btn:hover .theme-toggle-back {
+  background: rgba(0, 102, 102, 0.05);
 }
 
 /* ── Search Bar Responsive Queries ── */
@@ -337,11 +411,11 @@ body {
    Matches the teal palette so it feels part of the same design. */
 .sidebar {
   height: 100%;
-  width: 250px;
+  width: 200px;
   position: fixed;
   z-index: 1002;
   top: 0;
-  left: -250px; /* Hidden by default */
+  left: -200px; /* Hidden by default */
   background: linear-gradient(180deg, var(--grad-start) 0%, var(--primary-bg) 100%);
   border-right: 1px solid var(--border-color);
   overflow-x: hidden;
@@ -444,25 +518,70 @@ body {
   place-items: center;
   transition: background 1s, border-color 1s;
   overflow: hidden;
+  position: relative; /* Ensure child absolute icons center relative to this card */
 }
 
 .hero-card h2 {
   font-size: 32px;
   margin-bottom: 16px;
   color: var(--main-text);
+  position: relative; /* Keep text above icons */
+  z-index: 2;
 }
 
 .hero-card p {
   font-size: 18px;
   line-height: 1.6;
   color: var(--text-muted);
+  position: relative; /* Keep text above icons */
+  z-index: 2;
+}
+
+/* ── Hero Weather Icons ── */
+.hero-weather-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 350px; /* Increased to approx 70% of the box area */
+  line-height: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 1s ease-in-out;
+  filter: blur(2px);
+}
+
+/* Winter Icon Logic (Default state) */
+.winter-icon {
+  opacity: 0.1;
+}
+
+/* Summer Icon Logic (Visible only in summer theme) */
+[data-theme="summer"] .summer-icon {
+  opacity: 0.1;
+}
+
+/* Ensure icons are hidden when not in their theme */
+[data-theme="summer"] .winter-icon {
+  opacity: 0;
+}
+
+/* Default state for summer icon is hidden */
+.summer-icon {
+  opacity: 0;
 }
 
 /* Seasonal Content Visibility */
 .winter-content,
 .summer-content {
   grid-area: 1 / 1; /* Stack them in the same grid cell */
-  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
   width: 100%;
 }
 
@@ -550,6 +669,11 @@ body:not([data-theme="summer"]) .seasonal-vertical-image .winter-img {
   margin-bottom: 24px;
   text-align: left;
   letter-spacing: 0.5px;
+  transition: opacity 0.6s ease-in-out;
+}
+
+.seasonal-slider-section h3.fading {
+  opacity: 0;
 }
 
 .slider-wrapper {
@@ -560,6 +684,11 @@ body:not([data-theme="summer"]) .seasonal-vertical-image .winter-img {
   /* Add a fade effect to the edges */
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  transition: opacity 0.6s ease-in-out;
+}
+
+.slider-wrapper.fading {
+  opacity: 0;
 }
 
 /* ── Slider Navigation Arrows ── */
@@ -612,6 +741,22 @@ body:not([data-theme="summer"]) .seasonal-vertical-image .winter-img {
   /* Hide scrollbar for seamless running effect */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.product-slider.grabbing {
+  cursor: grabbing;
+}
+
+.slider-card {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.slider-card img {
+  pointer-events: none;
 }
 
 .product-slider::-webkit-scrollbar {
@@ -765,4 +910,3 @@ input.invalid {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-highlight); /* Subtle interaction change */
 }
-

@@ -43,10 +43,14 @@ function getSeasonalTheme() {
  * Applies the given theme to the document and saves it to localStorage.
  */
 function setTheme(themeName) {
+  const toggleBtn = document.getElementById('theme-toggle');
+  
   if (themeName === 'summer') {
     document.documentElement.setAttribute('data-theme', 'summer');
+    if (toggleBtn) toggleBtn.classList.remove('flipped');
   } else {
     document.documentElement.removeAttribute('data-theme');
+    if (toggleBtn) toggleBtn.classList.add('flipped');
   }
   localStorage.setItem('preferred-theme', themeName);
 }
@@ -56,16 +60,32 @@ function setTheme(themeName) {
  */
 function initTheme() {
   const savedTheme = localStorage.getItem('preferred-theme');
-  if (savedTheme) {
-    setTheme(savedTheme);
-  } else {
-    setTheme(getSeasonalTheme());
+  const currentTheme = savedTheme || getSeasonalTheme();
+  setTheme(currentTheme);
+
+  // Set up the flipping toggle listener
+  const toggleBtn = document.getElementById('theme-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const isSummer = document.documentElement.getAttribute('data-theme') === 'summer';
+      const newTheme = isSummer ? 'winter' : 'summer';
+      
+      // Check for specialized toggle handler (e.g., in products.js)
+      if (typeof onThemeToggle === 'function') {
+        onThemeToggle(newTheme);
+      } else {
+        setTheme(newTheme);
+        // If we are on the home page, refresh the seasonal slider
+        if (typeof loadSeasonalProducts === 'function') {
+          loadSeasonalProducts();
+        }
+      }
+    });
   }
 }
 
-// Initialization is now handled by the inline "Theme Guard" script in HTML to prevent flashing.
-// This file still provides setTheme() for manual changes.
-
+// Initialize theme on DOM content loaded
+window.addEventListener('DOMContentLoaded', initTheme);
 
 /**
  * Navigates the parent (opener) window and closes the current popup.

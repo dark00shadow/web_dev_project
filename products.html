@@ -31,6 +31,12 @@
       </form>
     </div>
     <div class="navbar-right">
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <div class="theme-toggle-inner">
+          <div class="theme-toggle-front">☀️</div>
+          <div class="theme-toggle-back">❄️</div>
+        </div>
+      </button>
       <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 520, 800)">Login</a>
       <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 520, 800)">Register</a>
     </div>
@@ -84,6 +90,23 @@
                 <button class="filter-item" data-category="Dresses">Dresses</button>
                 <button class="filter-item" data-category="Accessories">Accessories</button>
                 <button class="filter-item" data-category="Sportswear">Sportswear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Size Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('size-content')">
+              Sizes <span class="arrow">▼</span>
+            </button>
+            <div id="size-content" class="dropdown-content">
+              <div class="filter-list" id="size-filter-list">
+                <button class="filter-item active" data-size="all">All Sizes</button>
+                <button class="filter-item" data-size="S">S</button>
+                <button class="filter-item" data-size="M">M</button>
+                <button class="filter-item" data-size="L">L</button>
+                <button class="filter-item" data-size="XL">XL</button>
+                <button class="filter-item" data-size="XXL">XXL</button>
               </div>
             </div>
           </div>
@@ -155,37 +178,6 @@
 
     </div><!-- /.products-main -->
   </div><!-- /.page-layout -->
-
-  <!-- Add to Cart Confirmation Modal -->
-  <div id="cart-modal" class="modal-overlay" aria-hidden="true">
-    <div class="modal-card">
-      <header class="modal-header">
-        <h3>Add to Cart</h3>
-        <button class="modal-close-btn" onclick="closeCartModal()">&times;</button>
-      </header>
-      <div class="modal-body">
-        <p class="modal-product-name" id="modal-product-name">Product Name</p>
-        <p class="modal-product-price" id="modal-product-price">$0.00</p>
-        
-        <form id="cart-confirm-form" onsubmit="confirmAddToCart(event)">
-          <div class="form-group">
-            <label for="quantity-input">Quantity</label>
-            <div class="quantity-selector">
-              <button type="button" class="qty-btn minus" aria-label="Decrease quantity">−</button>
-              <input type="number" id="quantity-input" name="quantity" min="1" value="1" required>
-              <button type="button" class="qty-btn plus" aria-label="Increase quantity">+</button>
-            </div>
-            <span class="qty-stock-hint" id="qty-stock-hint">Available stock: 10</span>
-            <span class="qty-error" id="qty-error"></span>
-          </div>
-          <div class="modal-actions">
-            <button type="button" class="btn-secondary" onclick="closeCartModal()">Cancel</button>
-            <button type="submit" class="btn-primary" id="confirm-btn">Confirm</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>

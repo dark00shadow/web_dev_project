@@ -27,6 +27,12 @@
         </form>
       </div>
       <div class="navbar-right">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <div class="theme-toggle-inner">
+            <div class="theme-toggle-front">☀️</div>
+            <div class="theme-toggle-back">❄️</div>
+          </div>
+        </button>
         <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 520, 800)">Login</a>
         <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 520, 800)">Register</a>
       </div>
@@ -55,16 +61,19 @@
           </aside>
 
           <!-- Hero Text Content (Now on the right) -->
-           <section class="hero-card">
-             <div class="winter-content">
-               <h2>Cold Weather, Sharp Layers</h2>
-               <p>Tailored wools, insulated down, and premium knits. Elevate your winter wardrobe.</p>
-             </div>
-             <div class="summer-content">
-               <h2>High Season Style</h2>
-               <p>Effortless silhouettes and sun-drenched hues. Discover our curated summer essentials.</p>
-             </div>
-           </section>
+          <section class="hero-card">
+            <div class="hero-weather-icon winter-icon">❄️</div>
+            <div class="hero-weather-icon summer-icon">☀️</div>
+
+            <div class="winter-content">
+              <h2>Cold Weather, Sharp Layers</h2>
+              <p>Tailored wools, insulated down, and premium knits. Elevate your winter wardrobe.</p>
+            </div>
+            <div class="summer-content">
+              <h2>High Season Style</h2>
+              <p>Effortless silhouettes and sun-drenched hues. Discover our curated summer essentials.</p>
+            </div>
+          </section>
         </div>
 
         <!-- Seasonal Product Slider -->

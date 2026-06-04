@@ -1,5 +1,8 @@
 /* index.js - Logic for the landing page */
 
+let scrollAnimationFrame;
+let currentScrollX = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
     loadSeasonalProducts();
 });
@@ -20,7 +23,16 @@ function seasonIcon(season) {
 async function loadSeasonalProducts() {
     const slider = document.getElementById("seasonal-slider");
     const title = document.getElementById("seasonal-title");
-    if (!slider) return;
+    const wrapper = document.querySelector(".slider-wrapper");
+    if (!slider || !title || !wrapper) return;
+
+    // Start fade out if slider already has content
+    if (slider.children.length > 0) {
+        title.classList.add("fading");
+        wrapper.classList.add("fading");
+        // Wait for 0.6s fade transition (as requested)
+        await new Promise(resolve => setTimeout(resolve, 600));
+    }
 
     try {
         const response = await fetch("product.json");
@@ -34,6 +46,8 @@ async function loadSeasonalProducts() {
 
         if (seasonalProducts.length === 0) {
             slider.innerHTML = '<p class="empty-state">No products found for this season.</p>';
+            title.classList.remove("fading");
+            wrapper.classList.remove("fading");
             return;
         }
 
@@ -56,65 +70,140 @@ async function loadSeasonalProducts() {
 
         // Inject original products + a clone of the same products for seamless looping
         slider.innerHTML = productHTML + productHTML;
+        
+        // Reset scroll position for new season
+        slider.scrollLeft = 0;
+        currentScrollX = 0;
 
+        // Start movement logic
         startAutoScroll(slider);
+        
+        // Fade back in
+        title.classList.remove("fading");
+        wrapper.classList.remove("fading");
 
     } catch (err) {
         console.error("Failed to load products for slider:", err);
         slider.innerHTML = '<p class="empty-state">Could not load seasonal products.</p>';
+        title.classList.remove("fading");
+        wrapper.classList.remove("fading");
     }
 }
 
 function startAutoScroll(slider) {
-    let scrollSpeed = 1; // Pixels per frame
+    // Cancel any existing animation to prevent speed buildup
+    if (scrollAnimationFrame) {
+        cancelAnimationFrame(scrollAnimationFrame);
+    }
+
+    const baseSpeed = 0.8; // Increased speed for a more dynamic feel
+    let direction = 1; // 1 for right, -1 for left
     let isPaused = false;
     const prevBtn = document.getElementById("slider-prev");
     const nextBtn = document.getElementById("slider-next");
 
     function step() {
         if (!isPaused) {
-            slider.scrollLeft += scrollSpeed;
+            currentScrollX += baseSpeed * direction;
+            slider.scrollLeft = Math.floor(currentScrollX);
 
-            // Seamless loop: if we've scrolled past the first set of items, jump back to the start
-            if (slider.scrollLeft >= slider.scrollWidth / 2) {
+            const halfWidth = slider.scrollWidth / 2;
+            // Seamless loop: if we've scrolled past the first set of items (moving right)
+            if (direction === 1 && slider.scrollLeft >= halfWidth) {
+                currentScrollX = 0;
                 slider.scrollLeft = 0;
+            } 
+            // Seamless loop: if we've scrolled past the start (moving left)
+            else if (direction === -1 && currentScrollX <= 0) {
+                currentScrollX = halfWidth;
+                slider.scrollLeft = halfWidth;
             }
         }
-        requestAnimationFrame(step);
+        scrollAnimationFrame = requestAnimationFrame(step);
     }
 
-    // Manual navigation logic
-    if (prevBtn) {
-        prevBtn.addEventListener("click", () => {
-            const halfWidth = slider.scrollWidth / 2;
-            slider.scrollLeft -= 320; // Scroll back by a bit more than one card
+    // Common logic for arrows
+    const setupArrow = (btn, dir) => {
+        if (!btn || btn.dataset.listenerAttached) return;
 
-            // If we go below 0, jump to the same relative position in the second set
-            if (slider.scrollLeft <= 0) {
-                slider.scrollLeft += halfWidth;
-            }
+        // Click: Change direction and move slightly
+        btn.addEventListener("click", (e) => {
+            direction = dir;
+            currentScrollX += 160 * dir; // Move slightly in that direction
+            slider.scrollLeft = Math.floor(currentScrollX);
         });
-    }
 
-    if (nextBtn) {
-        nextBtn.addEventListener("click", () => {
-            const halfWidth = slider.scrollWidth / 2;
-            slider.scrollLeft += 320; // Scroll forward
+        btn.dataset.listenerAttached = "true";
+    };
 
-            // If we go past the first set, jump back to the same relative position in the first set
-            if (slider.scrollLeft >= halfWidth) {
-                slider.scrollLeft -= halfWidth;
-            }
-        });
-    }
+    setupArrow(prevBtn, -1);
+    setupArrow(nextBtn, 1);
 
-    // Pause scrolling on hover of the wrapper or buttons
+    // ── Touch Swipe & Mouse Drag Logic ──
+    let isDragging = false;
+    let startX;
+    let scrollLeftStart;
+
+    const startDragging = (e) => {
+        isDragging = true;
+        isPaused = true;
+        slider.classList.add('grabbing');
+        startX = (e.pageX || e.touches[0].pageX) - slider.offsetLeft;
+        scrollLeftStart = slider.scrollLeft;
+        currentScrollX = slider.scrollLeft; // Sync our internal tracker
+    };
+
+    const stopDragging = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        isPaused = false;
+        slider.classList.remove('grabbing');
+    };
+
+    const moveDragging = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = (e.pageX || e.touches[0].pageX) - slider.offsetLeft;
+        const walk = (x - startX) * 1.5; // Scroll speed multiplier
+        
+        currentScrollX = scrollLeftStart - walk;
+        
+        // Handle directional memory: if they drag left, change auto-scroll direction to -1
+        if (walk < 0) direction = 1;
+        if (walk > 0) direction = -1;
+
+        slider.scrollLeft = Math.floor(currentScrollX);
+
+        // Loop handling during drag
+        const halfWidth = slider.scrollWidth / 2;
+        if (slider.scrollLeft >= halfWidth) {
+            currentScrollX -= halfWidth;
+            scrollLeftStart -= halfWidth;
+        } else if (slider.scrollLeft <= 0) {
+            currentScrollX += halfWidth;
+            scrollLeftStart += halfWidth;
+        }
+    };
+
+    slider.addEventListener('mousedown', startDragging);
+    slider.addEventListener('touchstart', startDragging, { passive: false });
+    
+    window.addEventListener('mousemove', moveDragging);
+    window.addEventListener('touchmove', moveDragging, { passive: false });
+    
+    window.addEventListener('mouseup', stopDragging);
+    window.addEventListener('touchend', stopDragging);
+
+    // Pause scrolling on hover
     const wrapper = slider.closest(".slider-wrapper");
-    if (wrapper) {
-        wrapper.addEventListener("mouseenter", () => isPaused = true);
+    if (wrapper && !wrapper.dataset.listenerAttached) {
+        wrapper.addEventListener("mouseenter", (e) => {
+            if (e.target === wrapper) isPaused = true;
+        });
         wrapper.addEventListener("mouseleave", () => isPaused = false);
+        wrapper.dataset.listenerAttached = "true";
     }
 
     // Initial start
-    requestAnimationFrame(step);
+    scrollAnimationFrame = requestAnimationFrame(step);
 }

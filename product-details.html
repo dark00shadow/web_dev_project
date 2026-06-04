@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — Clothes Store</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="product-details.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="common.js" defer></script>
+  <script src="product-details.js" defer></script>
+</head>
+<body class="details-page">
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
+    <a href="index.html" class="logo-link"><h1 class="logo">Clothes Store</h1></a>
+    <div class="navbar-search">
+      <form class="search-form" action="products.html" method="GET">
+        <input type="search" name="search" class="search-input" placeholder="Search clothes..." aria-label="Search">
+        <button type="submit" class="search-btn">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
+    <div class="navbar-right">
+      <button id="theme-toggle" class="theme-toggle-btn">
+        <div class="theme-toggle-inner">
+          <div class="theme-toggle-front">☀️</div>
+          <div class="theme-toggle-back">❄️</div>
+        </div>
+      </button>
+      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 520, 800)">Login</a>
+      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 520, 800)">Register</a>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <hr>
+      <a href="#about">About Us</a>
+    </nav>
+  </aside>
+
+  <!-- Product Details Container -->
+  <main class="details-container" id="details-view">
+    <!-- Injected by product-details.js -->
+  </main>
+
+</body>
+</html>

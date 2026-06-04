@@ -9,35 +9,74 @@ function seasonIcon(season) {
 function renderCard(product) {
     const seasonClass = product.season.toLowerCase();
     const totalStock = product.sizes ? Object.values(product.sizes).reduce((sum, qty) => sum + qty, 0) : 0;
+
+    // Prepare size options for the back side
+    const availableSizes = product.sizes ? Object.entries(product.sizes).filter(([_, qty]) => qty > 0) : [];
+    const sizeButtons = availableSizes.map(([size, qty], idx) => 
+        `<button type="button" class="size-btn ${idx === 0 ? 'active' : ''}" data-size="${size}" data-stock="${qty}">${size}</button>`
+    ).join('');
+    
+    const firstSizeStock = availableSizes.length > 0 ? availableSizes[0][1] : 0;
     
     return `
-      <article class="product-card" data-id="${product.id}" data-season="${product.season}" data-category="${product.category}">
-        <div class="product-image">
-          <img
-            src="${product.image}"
-            alt="${product.name}"
-            onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'"
-          >
-        </div>
-        <div class="product-body">
-          <span class="product-category">${product.category}</span>
-          <span class="season-badge ${seasonClass}">${product.season}</span>
-          <h2 class="product-name">${product.name}</h2>
-          <p class="product-description">${product.description}</p>
-          <div class="product-footer">
-            <span class="product-price">$${product.price.toFixed(2)}</span>
-            <div class="cart-action">
-              <button class="add-to-cart-btn" ${totalStock === 0 ? 'disabled' : ''}>
-                ${totalStock === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </button>
-              <div class="stock-info ${totalStock > 0 && totalStock < 5 ? 'low-stock' : ''}">
-                <span class="stock-label">${totalStock > 0 && totalStock < 5 ? 'Low Stock' : 'Stock'}</span>
-                <span class="stock-number">${totalStock}</span>
+      <div class="product-card-container" data-id="${product.id}">
+        <div class="product-card-inner">
+          
+          <!-- Front Face -->
+          <article class="product-card product-card-front" data-season="${product.season}" data-category="${product.category}">
+            <div class="product-image">
+              <img
+                src="${product.image}"
+                alt="${product.name}"
+                onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'"
+              >
+            </div>
+            <div class="product-body">
+              <span class="product-category">${product.category}</span>
+              <span class="season-badge ${seasonClass}">${product.season}</span>
+              <h2 class="product-name">${product.name}</h2>
+              <p class="product-description">${product.description}</p>
+              <div class="product-footer">
+                <span class="product-price">$${product.price.toFixed(2)}</span>
+                <div class="cart-action">
+                  <button class="btn-add-to-cart-trigger add-to-cart-btn" ${totalStock === 0 ? 'disabled' : ''}>
+                    ${totalStock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  </button>
+                  <div class="stock-info ${totalStock > 0 && totalStock < 5 ? 'low-stock' : ''}">
+                    <span class="stock-label">${totalStock > 0 && totalStock < 5 ? 'Low Stock' : 'Stock'}</span>
+                    <span class="stock-number">${totalStock}</span>
+                  </div>
+                </div>
               </div>
             </div>
+          </article>
+
+          <!-- Back Face -->
+          <div class="product-card-back">
+            <div class="back-header">
+              <p class="back-product-name">${product.name}</p>
+            </div>
+            <div class="selector-group">
+              <label>Size:</label>
+              <div class="size-options">${sizeButtons}</div>
+            </div>
+            <div class="selector-group">
+              <label>Quantity:</label>
+              <div class="qty-counter">
+                <button type="button" class="qty-btn-flip minus">−</button>
+                <input type="number" value="1" min="1" max="${firstSizeStock}" class="qty-input-flip" readonly>
+                <button type="button" class="qty-btn-flip plus">+</button>
+              </div>
+              <span class="stock-hint">Available: <span class="size-stock-num">${firstSizeStock}</span></span>
+            </div>
+            <div class="back-actions">
+              <button class="btn-confirm-cart">Confirm</button>
+              <button class="btn-cancel-flip">Cancel</button>
+            </div>
           </div>
+
         </div>
-      </article>
+      </div>
     `;
 }
 
@@ -83,6 +122,7 @@ fetch("product.json")
 /* ── Filter & render the grid ── */
 let activeCategories = new Set();
 let activeGenders = new Set();
+let activeSizes = new Set();
 let activeSeason = "all";
 
 function getCurrentSeason() {
@@ -125,8 +165,11 @@ function renderGrid(filterValue) {
         // If a gender is selected, show matching gender OR unisex items. If no gender selected, show all.
         const matchesGender = activeGenders.size === 0 || activeGenders.has(p.gender) || p.gender === "unisex";
         const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+        // Size filtering: Product must have at least one of the activeSizes in stock
+        const matchesSize = activeSizes.size === 0 || 
+            (p.sizes && Object.entries(p.sizes).some(([size, qty]) => activeSizes.has(size) && qty > 0));
         
-        return matchesSeason && matchesCategory && matchesGender && matchesPrice;
+        return matchesSeason && matchesCategory && matchesGender && matchesPrice && matchesSize;
     });
 
     // 2. Apply seasonal sorting to the filtered results
@@ -148,6 +191,7 @@ function resetFilters() {
     // 1. Clear state
     activeCategories.clear();
     activeGenders.clear();
+    activeSizes.clear();
     activeSeason = "all";
 
     // 2. Reset UI - Price Range
@@ -196,6 +240,19 @@ function syncSidebarUI() {
         }
     });
 
+    // Sync Sizes
+    document.querySelectorAll('#size-filter-list .filter-item').forEach(item => {
+        const size = item.dataset.size;
+        if (size === "all") {
+            if (activeSizes.size === 0) item.classList.add("active");
+            else item.classList.remove("active");
+        } else if (activeSizes.has(size)) {
+            item.classList.add("active");
+        } else {
+            item.classList.remove("active");
+        }
+    });
+
     // Sync Categories
     document.querySelectorAll('#category-filter-list .filter-item').forEach(item => {
         const cat = item.dataset.category;
@@ -237,6 +294,18 @@ function handleSidebarCategoryClick(category, element) {
     renderGrid();
 }
 
+function handleSidebarSizeClick(size, element) {
+    if (size === "all") {
+        activeSizes.clear();
+    } else if (activeSizes.has(size)) {
+        activeSizes.delete(size);
+    } else {
+        activeSizes.add(size);
+    }
+    syncSidebarUI();
+    renderGrid();
+}
+
 function handleSidebarGenderClick(gender, element) {
     if (activeGenders.has(gender)) {
         activeGenders.delete(gender);
@@ -246,6 +315,36 @@ function handleSidebarGenderClick(gender, element) {
         element.classList.add("active");
     }
     renderGrid();
+}
+
+/**
+ * Specialized theme toggle handler for the products page.
+ * Decouples theme changes from filtering, unless a specific seasonal filter is active.
+ */
+function onThemeToggle(newTheme) {
+    const seasonLabel = newTheme.charAt(0).toUpperCase() + newTheme.slice(1);
+
+    // If the active filter is specifically a season, toggle the filter along with the theme
+    if (activeSeason === "Winter" || activeSeason === "Summer") {
+        activeSeason = seasonLabel;
+
+        // Sync top bar buttons to reflect the toggled season filter
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            const val = btn.dataset.filter;
+            if (val === "Winter" || val === "Summer" || val === "all") {
+                if (val === seasonLabel) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            }
+        });
+
+        syncSidebarUI();
+    }
+
+    setTheme(newTheme);
+    renderGrid(); // Re-renders to update sorting based on the new theme
 }
 
 function handleSidebarSeasonClick(season, element) {
@@ -371,7 +470,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 // When switching seasons, we might want to keep or clear categories. 
                 // Let's keep them for now as it's more flexible.
             } else {
-                // Category button in top bar
+                // Category button in top bar - Clear all and set only this one
+                activeCategories.clear();
+                activeCategories.add(filterValue);
+                
                 document.querySelectorAll(".filter-btn").forEach(b => {
                     const val = b.dataset.filter;
                     if (val !== "Winter" && val !== "Summer" && val !== "all") {
@@ -379,6 +481,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 });
                 btn.classList.add("active");
+                
+                // Sync sidebar to show only this category
+                syncSidebarUI();
             }
 
             /* Hook to theme engine (from common.js) */
@@ -401,6 +506,18 @@ window.addEventListener('DOMContentLoaded', () => {
             
             const season = item.dataset.season;
             handleSidebarSeasonClick(season, item);
+        });
+    }
+
+    /* Hook up Sidebar Sizes */
+    const sidebarSizeList = document.getElementById("size-filter-list");
+    if (sidebarSizeList) {
+        sidebarSizeList.addEventListener("click", (e) => {
+            const item = e.target.closest(".filter-item");
+            if (!item) return;
+            
+            const size = item.dataset.size;
+            handleSidebarSizeClick(size, item);
         });
     }
 
@@ -473,176 +590,83 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* Add to Cart event delegation */
+    /* Updated Add to Cart event delegation for Flipping Cards */
     const grid = document.getElementById("products-grid");
     if (grid) {
         grid.addEventListener("click", (e) => {
-            const btn = e.target.closest(".add-to-cart-btn");
-            if (!btn) return;
-            
-            const card = btn.closest(".product-card");
-            if (!card) return;
-            
-            const productId = parseInt(card.dataset.id, 10);
+            const container = e.target.closest(".product-card-container");
+            if (!container) return;
+
+            const productId = container.dataset.id;
             const product = allProducts.find(p => p.id === productId);
-            if (product) {
-                if (product.stock > 0) {
-                    openCartModal(product);
-                } else {
-                    showToast(`"${product.name}" is currently out of stock.`);
+            if (!product) return;
+
+            // Navigation to details page if clicking on the front (but not the button)
+            if (e.target.closest(".product-card-front") && !e.target.closest(".btn-add-to-cart-trigger")) {
+                window.location.href = `product-details.html?id=${productId}`;
+                return;
+            }
+
+            // 1. Trigger Flip to Back
+            if (e.target.closest(".btn-add-to-cart-trigger")) {
+                container.classList.add("is-flipped");
+            }
+
+            // 2. Flip Back / Cancel Action
+            if (e.target.closest(".btn-cancel-flip")) {
+                container.classList.remove("is-flipped");
+            }
+
+            // 3. Confirm Selection & Add to Cart Logic
+            if (e.target.closest(".btn-confirm-cart")) {
+                const activeSizeBtn = container.querySelector(".size-btn.active");
+                if (!activeSizeBtn) return;
+                
+                const selectedSize = activeSizeBtn.dataset.size;
+                const qtyInput = container.querySelector(".qty-input-flip");
+                const selectedQty = parseInt(qtyInput.value, 10);
+                
+                if (product.sizes[selectedSize] >= selectedQty) {
+                    product.sizes[selectedSize] -= selectedQty;
+                    showToast(`Added ${selectedQty} × "${product.name}" (${selectedSize}) to cart.`);
+                    renderGrid();
                 }
+            }
+
+            // 4. Quantity Adjustments
+            if (e.target.closest(".qty-btn-flip.plus")) {
+                const input = container.querySelector(".qty-input-flip");
+                const max = parseInt(input.getAttribute("max"), 10);
+                let val = parseInt(input.value, 10);
+                if (val < max) input.value = val + 1;
+            }
+            if (e.target.closest(".qty-btn-flip.minus")) {
+                const input = container.querySelector(".qty-input-flip");
+                let val = parseInt(input.value, 10);
+                if (val > 1) input.value = val - 1;
+            }
+
+            // 5. Size Selection Toggle
+            if (e.target.closest(".size-btn")) {
+                const sizeBtn = e.target.closest(".size-btn");
+                container.querySelectorAll(".size-btn").forEach(btn => btn.classList.remove("active"));
+                sizeBtn.classList.add("active");
+                
+                const stock = parseInt(sizeBtn.dataset.stock, 10);
+                const input = container.querySelector(".qty-input-flip");
+                const hint = container.querySelector(".size-stock-num");
+                
+                input.setAttribute("max", stock);
+                if (parseInt(input.value, 10) > stock) input.value = stock;
+                if (hint) hint.textContent = stock;
             }
         });
     }
 
-    /* Quantity button click-and-hold interaction */
-    const minusBtn = document.querySelector(".qty-btn.minus");
-    const plusBtn = document.querySelector(".qty-btn.plus");
-
-    if (minusBtn) {
-        minusBtn.addEventListener("mousedown", (e) => {
-            if (e.button !== 0) return; // Left click only
-            startHoldAdjust(-1);
-        });
-        minusBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            startHoldAdjust(-1);
-        });
-        minusBtn.addEventListener("mouseleave", stopHoldAdjust);
-    }
-
-    if (plusBtn) {
-        plusBtn.addEventListener("mousedown", (e) => {
-            if (e.button !== 0) return;
-            startHoldAdjust(1);
-        });
-        plusBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            startHoldAdjust(1);
-        });
-        plusBtn.addEventListener("mouseleave", stopHoldAdjust);
-    }
-
     // Safety cancellations on window release
-    window.addEventListener("mouseup", stopHoldAdjust);
-    window.addEventListener("touchend", stopHoldAdjust);
-    window.addEventListener("touchcancel", stopHoldAdjust);
 });
 
-/* ── Modal & Toast Controller Logic ── */
-let activeProductForCart = null;
-
-function openCartModal(product) {
-    activeProductForCart = product;
-    
-    const modal = document.getElementById("cart-modal");
-    const nameEl = document.getElementById("modal-product-name");
-    const priceEl = document.getElementById("modal-product-price");
-    const qtyInput = document.getElementById("quantity-input");
-    const stockHint = document.getElementById("qty-stock-hint");
-    const errorEl = document.getElementById("qty-error");
-    
-    if (!modal || !nameEl || !priceEl || !qtyInput || !stockHint) return;
-    
-    nameEl.textContent = product.name;
-    priceEl.textContent = `$${product.price.toFixed(2)}`;
-    
-    const totalStock = product.sizes ? Object.values(product.sizes).reduce((sum, qty) => sum + qty, 0) : 0;
-    
-    qtyInput.value = 1;
-    qtyInput.min = 1;
-    qtyInput.max = totalStock;
-    
-    stockHint.textContent = `Available stock: ${totalStock}`;
-    if (errorEl) {
-        errorEl.textContent = "";
-        errorEl.style.display = "none";
-    }
-    
-    modal.classList.add("active");
-    modal.setAttribute("aria-hidden", "false");
-}
-
-function closeCartModal() {
-    const modal = document.getElementById("cart-modal");
-    if (modal) {
-        modal.classList.remove("active");
-        modal.setAttribute("aria-hidden", "true");
-    }
-    activeProductForCart = null;
-}
-
-function adjustQuantity(amount) {
-    const qtyInput = document.getElementById("quantity-input");
-    const errorEl = document.getElementById("qty-error");
-    if (!qtyInput || !activeProductForCart) return;
-    
-    let val = parseInt(qtyInput.value, 10) || 1;
-    val += amount;
-    
-    const totalStock = activeProductForCart.sizes ? Object.values(activeProductForCart.sizes).reduce((sum, qty) => sum + qty, 0) : 0;
-    
-    if (val < 1) val = 1;
-    if (val > totalStock) {
-        val = totalStock;
-    }
-    
-    qtyInput.value = val;
-    
-    if (errorEl) {
-        errorEl.textContent = "";
-        errorEl.style.display = "none";
-    }
-}
-
-function confirmAddToCart(event) {
-    event.preventDefault();
-    if (!activeProductForCart) return;
-    
-    const qtyInput = document.getElementById("quantity-input");
-    const errorEl = document.getElementById("qty-error");
-    if (!qtyInput) return;
-    
-    const qty = parseInt(qtyInput.value, 10);
-    const totalStock = activeProductForCart.sizes ? Object.values(activeProductForCart.sizes).reduce((sum, qty) => sum + qty, 0) : 0;
-    
-    if (isNaN(qty) || qty < 1) {
-        if (errorEl) {
-            errorEl.textContent = "Please enter a valid quantity.";
-            errorEl.style.display = "block";
-        }
-        return;
-    }
-    
-    if (qty > totalStock) {
-        if (errorEl) {
-            errorEl.textContent = `Only ${totalStock} items available in stock.`;
-            errorEl.style.display = "block";
-        }
-        return;
-    }
-    
-    // Decrement inventory (for now, we'll subtract from available sizes sequentially)
-    let remainingToSubtract = qty;
-    for (const size in activeProductForCart.sizes) {
-        if (activeProductForCart.sizes[size] >= remainingToSubtract) {
-            activeProductForCart.sizes[size] -= remainingToSubtract;
-            remainingToSubtract = 0;
-            break;
-        } else {
-            remainingToSubtract -= activeProductForCart.sizes[size];
-            activeProductForCart.sizes[size] = 0;
-        }
-    }
-    
-    // Refresh products view to reflect the updated stock
-    const activeBtn = document.querySelector(".filter-btn.active");
-    const currentFilter = activeBtn ? activeBtn.dataset.filter : "all";
-    renderGrid(currentFilter);
-    
-    showToast(`Added ${qty} × "${activeProductForCart.name}" to your cart.`);
-    closeCartModal();
-}
+// Removal of old modal helper functions as flipping card is now self-contained.
 
 function showToast(message) {
     let container = document.querySelector(".toast-container");
@@ -668,27 +692,4 @@ function showToast(message) {
             toast.remove();
         });
     }, 3000);
-}
-
-/* ── Hold-to-adjust continuous controls ── */
-let holdTimeout = null;
-let holdInterval = null;
-
-function startHoldAdjust(amount) {
-    // Immediate click action
-    adjustQuantity(amount);
-    
-    // Delayed hold continuous looping
-    holdTimeout = setTimeout(() => {
-        holdInterval = setInterval(() => {
-            adjustQuantity(amount);
-        }, 80);
-    }, 400);
-}
-
-function stopHoldAdjust() {
-    if (holdTimeout) clearTimeout(holdTimeout);
-    if (holdInterval) clearInterval(holdInterval);
-    holdTimeout = null;
-    holdInterval = null;
 }

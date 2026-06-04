@@ -18,8 +18,8 @@ body.products-page {
   position: sticky;
   top: 60px;                /* exactly the navbar height — no gap */
   left: 0;
-  width: 220px;
-  min-width: 220px;
+  width: 180px;
+  min-width: 180px;
   height: calc(100vh - 60px);
   background: linear-gradient(180deg, var(--grad-start) 0%, var(--primary-bg) 100%);
   border-right: 1px solid var(--border-color);
@@ -305,6 +305,25 @@ body.products-page {
   padding: 0 20px 32px;
 }
 
+/* ── Product Card Flipping ── */
+.product-card-container {
+  perspective: 1000px;
+  height: 100%;
+  min-height: 480px; /* Ensures consistent grid row height for flipping */
+}
+
+.product-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.product-card-container.is-flipped .product-card-inner {
+  transform: rotateY(180deg);
+}
+
 .filter-btn {
   background: var(--glass-bg);
   backdrop-filter: blur(8px);
@@ -331,10 +350,181 @@ body.products-page {
   display: grid;
   /* Responsive: at least 260px per card, fill available space */
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 28px;
+  gap: 32px;
   padding: 0 40px 60px;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+/* ── Faces ── */
+.product-card-front, .product-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-front {
+  z-index: 2;
+}
+
+.product-card-back {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  transform: rotateY(180deg);
+  padding: 50px 24px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Back face typography & groups */
+.back-header {
+  text-align: center;
+}
+
+.back-header h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--accent-winter);
+  margin-bottom: 5px;
+}
+
+.back-product-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--main-text);
+  margin-bottom: 20px;
+}
+
+.selector-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.selector-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted-heavy);
+}
+
+.size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.size-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--main-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.size-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.size-btn.active {
+  background: var(--accent-winter);
+  color: #1a1a1a;
+  border-color: var(--accent-winter);
+  font-weight: 700;
+}
+
+.qty-counter {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  width: fit-content;
+  overflow: hidden;
+}
+
+.qty-btn-flip {
+  background: none;
+  border: none;
+  color: var(--main-text);
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qty-btn-flip:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.qty-input-flip {
+  width: 40px;
+  border: none;
+  background: none;
+  text-align: center;
+  color: var(--main-text);
+  font-size: 16px;
+  font-weight: 700;
+  outline: none;
+}
+
+.stock-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.back-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-confirm-cart {
+  background: var(--accent-winter);
+  border: none;
+  color: #1a1a1a;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-confirm-cart:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.btn-cancel-flip {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-cancel-flip:hover {
+  color: var(--main-text);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* ── Product Card ── Glassmorphism consistent with other pages */
@@ -348,7 +538,7 @@ body.products-page {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
 }
 
 .product-card:hover {
@@ -588,9 +778,9 @@ body.products-page {
   .products-sidebar {
     position: fixed;
     top: 0;
-    left: -250px;          /* hidden off-screen */
-    width: 250px;
-    min-width: 250px;
+    left: -200px;          /* hidden off-screen */
+    width: 200px;
+    min-width: 200px;
     height: 100%;
     z-index: 1002;
     transition: left 0.3s ease;
