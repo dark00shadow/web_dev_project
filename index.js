@@ -5,6 +5,7 @@ let currentScrollX = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSeasonalProducts();
+    renderCategoryGrid();
 });
 
 function getCurrentSeason() {
@@ -24,15 +25,21 @@ async function loadSeasonalProducts() {
     const slider = document.getElementById("seasonal-slider");
     const title = document.getElementById("seasonal-title");
     const wrapper = document.querySelector(".slider-wrapper");
+    const headerWrap = document.querySelector(".slider-header-wrap");
+    const categoryGrid = document.getElementById("category-capsule-grid");
     if (!slider || !title || !wrapper) return;
 
     // Start fade out if slider already has content
     if (slider.children.length > 0) {
-        title.classList.add("fading");
+        if (categoryGrid) categoryGrid.classList.add("fading");
+        if (headerWrap) headerWrap.classList.add("fading");
+        else title.classList.add("fading");
         wrapper.classList.add("fading");
         // Wait for 0.6s fade transition (as requested)
         await new Promise(resolve => setTimeout(resolve, 600));
     }
+
+    renderCategoryGrid(); // Refresh macro-grid categories to match season
 
     try {
         const response = await fetch("product.json");
@@ -52,7 +59,7 @@ async function loadSeasonalProducts() {
         }
 
         const productHTML = seasonalProducts.map(product => `
-            <a href="products.html?search=${encodeURIComponent(product.name)}" class="slider-card">
+            <a href="product-details.html?id=${product.id}" class="slider-card">
                 <div class="slider-card-image">
                     <img 
                         src="${product.image}" 
@@ -79,15 +86,38 @@ async function loadSeasonalProducts() {
         startAutoScroll(slider);
         
         // Fade back in
+        if (categoryGrid) categoryGrid.classList.remove("fading");
+        if (headerWrap) headerWrap.classList.remove("fading");
         title.classList.remove("fading");
         wrapper.classList.remove("fading");
 
     } catch (err) {
         console.error("Failed to load products for slider:", err);
         slider.innerHTML = '<p class="empty-state">Could not load seasonal products.</p>';
+        if (categoryGrid) categoryGrid.classList.remove("fading");
+        if (headerWrap) headerWrap.classList.remove("fading");
         title.classList.remove("fading");
         wrapper.classList.remove("fading");
     }
+}
+
+/**
+ * Renders the 2x3 category capsule grid based on the active season.
+ */
+function renderCategoryGrid() {
+    const grid = document.getElementById("category-capsule-grid");
+    if (!grid) return;
+
+    const currentSeason = getCurrentSeason();
+    const categories = currentSeason === "Winter"
+        ? ['Coats', 'Tops', 'Shirts', 'Bottoms', 'Accessories', 'Sportswear']
+        : ['Shirts', 'T-Shirts', 'Bottoms', 'Dresses', 'Accessories', 'Sportswear'];
+
+    grid.innerHTML = categories.map(cat => `
+        <a href="products.html?season=${currentSeason.toLowerCase()}&category=${encodeURIComponent(cat.toLowerCase())}" class="category-capsule">
+            ${cat}
+        </a>
+    `).join('');
 }
 
 function startAutoScroll(slider) {
@@ -96,24 +126,25 @@ function startAutoScroll(slider) {
         cancelAnimationFrame(scrollAnimationFrame);
     }
 
-    const baseSpeed = 0.8; // Increased speed for a more dynamic feel
+    let baseSpeed = 0.8; 
     let direction = 1; // 1 for right, -1 for left
     let isPaused = false;
     const prevBtn = document.getElementById("slider-prev");
     const nextBtn = document.getElementById("slider-next");
 
     function step() {
-        if (!isPaused) {
+        if (!isPaused && slider.scrollWidth > slider.clientWidth) {
             currentScrollX += baseSpeed * direction;
             slider.scrollLeft = Math.floor(currentScrollX);
 
             const halfWidth = slider.scrollWidth / 2;
-            // Seamless loop: if we've scrolled past the first set of items (moving right)
-            if (direction === 1 && slider.scrollLeft >= halfWidth) {
+            
+            // Rightward loop
+            if (direction === 1 && currentScrollX >= halfWidth) {
                 currentScrollX = 0;
                 slider.scrollLeft = 0;
             } 
-            // Seamless loop: if we've scrolled past the start (moving left)
+            // Leftward loop
             else if (direction === -1 && currentScrollX <= 0) {
                 currentScrollX = halfWidth;
                 slider.scrollLeft = halfWidth;
@@ -124,20 +155,21 @@ function startAutoScroll(slider) {
 
     // Common logic for arrows
     const setupArrow = (btn, dir) => {
-        if (!btn || btn.dataset.listenerAttached) return;
+        if (!btn) return;
 
-        // Click: Change direction and move slightly
-        btn.addEventListener("click", (e) => {
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+
+        newBtn.addEventListener("click", () => {
             direction = dir;
-            currentScrollX += 160 * dir; // Move slightly in that direction
+            // Jump the scroll slightly for immediate feedback
+            currentScrollX += 260 * dir; 
             slider.scrollLeft = Math.floor(currentScrollX);
         });
-
-        btn.dataset.listenerAttached = "true";
     };
 
-    setupArrow(prevBtn, -1);
-    setupArrow(nextBtn, 1);
+    if (prevBtn) setupArrow(prevBtn, -1);
+    if (nextBtn) setupArrow(nextBtn, 1);
 
     // ── Touch Swipe & Mouse Drag Logic ──
     let isDragging = false;

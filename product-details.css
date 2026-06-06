@@ -1,11 +1,14 @@
 /* product-details.css */
 
-/* ── Page Entrance Animation ── */
-body.details-page {
-  opacity: 0;
-  animation: detailsEntrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+/* Reinforce Navbar Lock */
+.details-page .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1001;
 }
 
+/* ── Page Entrance Animation ── */
 @keyframes detailsEntrance {
   from {
     opacity: 0;
@@ -17,9 +20,16 @@ body.details-page {
   }
 }
 
+.details-page-content {
+  opacity: 0;
+  animation: detailsEntrance 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
 .details-container {
-  max-width: 1100px;
-  margin: 40px auto;
+  margin: 40px auto 60px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -28,7 +38,7 @@ body.details-page {
 }
 
 .details-image-section {
-  flex: 1.8;
+  flex: 1.6;
   max-width: 700px;
   height: 450px;
   border-radius: 16px;
@@ -44,6 +54,19 @@ body.details-page {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.details-buy-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  padding: 0 4px;
+}
+
+.details-buy-section .action-btn {
+  white-space: nowrap;
 }
 
 .details-info-section {
@@ -162,6 +185,11 @@ body.details-page {
   gap: 15px;
 }
 
+.seasonal-slider-section {
+  padding: 20px;
+  margin-top: 40px;
+}
+
 .action-btn {
   padding: 12px 28px;
   font-size: 15px;
@@ -171,6 +199,50 @@ body.details-page {
   color: var(--main-text);
   border-radius: 8px;
   transition: all 0.3s ease;
+}
+
+/* Ghost Button styling specifically for Add to Cart to match Login button */
+#add-to-cart-final:hover:not(:disabled) {
+  background-color: var(--login-hover-bg);
+  border-color: var(--accent-highlight);
+  color: var(--accent-highlight);
+  transform: translateY(-1px);
+}
+
+#add-to-cart-final:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--text-muted-heavy);
+  transform: none;
+}
+
+/* ── Dynamic Slider Masking ── */
+.details-page-content .slider-wrapper {
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  transition: mask-image 0.3s ease;
+}
+
+.details-page-content .slider-wrapper.mask-both {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent) !important;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent) !important;
+}
+
+.details-page-content .slider-wrapper.mask-left {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 100%) !important;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 100%) !important;
+}
+
+.details-page-content .slider-wrapper.mask-right {
+  mask-image: linear-gradient(to right, black 0%, black 90%, transparent) !important;
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 90%, transparent) !important;
+}
+
+/* Arrow visibility logic */
+.slider-arrow.hidden {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .nav-btn.primary:disabled {
@@ -187,5 +259,23 @@ body.details-page {
     margin: 20px;
     padding: 24px;
   }
-  .details-info-section { height: auto; }
+
+  .details-buy-section {
+    width: 100%;
+    padding: 0;
+    order: 2;
+  }
+
+  .details-buy-section .action-btn {
+    width: 100%;
+  }
+
+  .details-image-section {
+    order: 1;
+  }
+
+  .details-info-section {
+    height: auto;
+    order: 3;
+  }
 }

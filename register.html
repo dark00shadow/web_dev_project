@@ -18,8 +18,14 @@
   <!-- Navbar with Hamburger Button -->
   <nav class="navbar">
     <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
-    <a href="#" class="logo-link" onclick="navigateParent('index.html')"><h1 class="logo">Clothes Store</h1></a>
+    <a href="#" class="logo-link" onclick="navigateParent('index.html')"><h1 class="logo">Equinox Store</h1></a>
     <div class="navbar-right">
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <div class="theme-toggle-inner">
+          <div class="theme-toggle-front">☀️</div>
+          <div class="theme-toggle-back">❄️</div>
+        </div>
+      </button>
       <a href="login.html" class="nav-btn">Login</a>
       <a href="register.html" class="nav-btn primary">Register</a>
     </div>
@@ -32,7 +38,8 @@
     </div>
     <nav class="sidebar-nav">
       <a href="#" onclick="navigateParent('index.html')">Home</a>
-      <a href="#" onclick="navigateParent('products.html')">Products</a>
+      <a href="#" onclick="navigateParent('catalog.html')">Catalog</a>
+      <a href="#" onclick="navigateParent('orders.html')">Receipts</a>
       <a href="#" onclick="navigateParent('index.html#about')">About Us</a>
     </nav>
   </aside>
@@ -62,17 +69,23 @@
 
       <div class="input-group">
         <label for="number">Phone Number</label>
-        <input type="tel" name="number" id="number" placeholder="+213 0 00 00 00 00" required>
+        <input type="tel" name="number" id="number" placeholder="0XXXXXXXXX" maxlength="10" required>
       </div>
 
       <div class="input-row">
         <div class="input-group">
           <label for="pass">Password</label>
-          <input type="password" name="pass" id="pass" placeholder="••••••••" required>
+          <div class="password-wrapper">
+            <input type="password" name="pass" id="pass" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Visibility"></span>
+          </div>
         </div>
         <div class="input-group">
           <label for="pass_word">Confirm</label>
-          <input type="password" name="pass_word" id="pass_word" placeholder="••••••••" required>
+          <div class="password-wrapper">
+            <input type="password" name="pass_word" id="pass_word" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Visibility"></span>
+          </div>
         </div>
       </div>
 

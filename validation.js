@@ -8,8 +8,9 @@ const patterns = {
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     // Min 8 chars, 1 upper, 1 lower, 1 number, 1 special
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-    phone: /^\+?[0-9\s-]{8,20}$/, // Basic international phone format
-    name: /^[a-zA-Z\s]{2,30}$/ // Alpha and spaces, 2-30 chars
+    phone: /^[0-9]{10}$/, // Exactly 10 digits
+    name: /^[a-zA-Z\s]{2,30}$/, // Alpha and spaces, 2-30 chars
+    location: /^.{5in,200}$/ // Simple address pattern (min 5 chars)
 };
 
 /**
@@ -51,6 +52,8 @@ function validateField(input, pattern, errorMessage) {
  * Setup validation for Login form
  */
 function setupLoginValidation() {
+    if (document.getElementById('checkout-form')) return;
+
     const form = document.querySelector('form');
     if (!form || !document.getElementById('username')) return;
 
@@ -101,8 +104,10 @@ function setupLoginValidation() {
  * Setup validation for Register form
  */
 function setupRegisterValidation() {
+    if (document.getElementById('checkout-form')) return;
+
     const form = document.querySelector('form');
-    if (!form || !document.getElementById('fname')) return;
+    if (!form || !document.getElementById('fname') || !document.getElementById('number')) return;
 
     const fname = document.getElementById('fname');
     const prenom = document.getElementById('prenom');
@@ -149,7 +154,7 @@ function setupRegisterValidation() {
     fname.addEventListener('blur', () => validateField(fname, patterns.name, "Family name should be 2-30 letters."));
     prenom.addEventListener('blur', () => validateField(prenom, patterns.name, "Name should be 2-30 letters."));
     email.addEventListener('blur', () => validateField(email, patterns.email, "Please enter a valid email address."));
-    number.addEventListener('blur', () => validateField(number, patterns.phone, "Please enter a valid phone number."));
+    number.addEventListener('blur', () => validateField(number, patterns.phone, "Please enter a valid 10-digit phone number."));
     pass.addEventListener('blur', () => {
         validateField(pass, patterns.password, "Password needs 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.");
         if (pass_word.value !== '') validateConfirmPassword(); // Recheck confirm if it has value
@@ -161,7 +166,7 @@ function setupRegisterValidation() {
         { el: fname, pattern: patterns.name, msg: "Family name should be 2-30 letters." },
         { el: prenom, pattern: patterns.name, msg: "Name should be 2-30 letters." },
         { el: email, pattern: patterns.email, msg: "Please enter a valid email address." },
-        { el: number, pattern: patterns.phone, msg: "Please enter a valid phone number." },
+        { el: number, pattern: patterns.phone, msg: "Please enter a valid 10-digit phone number." },
         { el: pass, pattern: patterns.password, msg: "Password needs 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char." }
     ];
 
@@ -200,8 +205,118 @@ function setupRegisterValidation() {
     });
 }
 
+/**
+ * Setup validation for Checkout form
+ */
+function setupCheckoutValidation() {
+    const form = document.getElementById('checkout-form');
+    if (!form) return;
+
+    const fname = document.getElementById('fname');
+    const prenom = document.getElementById('prenom');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const wilaya = document.getElementById('wilaya');
+    const municipality = document.getElementById('municipality');
+    const payment = document.getElementById('payment');
+    const deliveryMethod = document.getElementById('delivery-method');
+    const location = document.getElementById('location');
+    const submitBtn = form.querySelector('.submit-btn');
+
+    const checkFormValidity = () => {
+        const isFnameValid = patterns.name.test(fname.value.trim());
+        const isPrenomValid = patterns.name.test(prenom.value.trim());
+        const isEmailValid = patterns.email.test(email.value.trim());
+        const isPhoneValid = patterns.phone.test(phone.value.trim());
+        const isWilayaValid = wilaya.value !== '';
+        const isMunicipalityValid = municipality.value !== '';
+        const isPaymentSupported = payment.value === 'delivery';
+        const isDeliveryMethodValid = deliveryMethod && deliveryMethod.value !== '';
+
+        const locationValue = location.value.trim();
+        const isLocationValid = (() => {
+            if (deliveryMethod.value === 'home') {
+                return patterns.location.test(locationValue);
+            }
+            if (deliveryMethod.value === 'center') {
+                return locationValue === '' || patterns.location.test(locationValue);
+            }
+            return true;
+        })();
+
+        submitBtn.disabled = !(isFnameValid && isPrenomValid && isEmailValid && isPhoneValid && isWilayaValid && isMunicipalityValid && isPaymentSupported && isDeliveryMethodValid && isLocationValid);
+    };
+
+    const inputs = [
+        { el: fname, pattern: patterns.name, msg: "Family name should be 2-30 letters." },
+        { el: prenom, pattern: patterns.name, msg: "Name should be 2-30 letters." },
+        { el: email, pattern: patterns.email, msg: "Please enter a valid email address." },
+        { el: phone, pattern: patterns.phone, msg: "Please enter a valid 10-digit phone number." },
+        { el: location, pattern: patterns.location, msg: "Shipping address must be 5-200 characters." }
+    ];
+
+    inputs.forEach(item => {
+        const isLocationField = item.el === location;
+
+        item.el.addEventListener('blur', () => {
+            if (isLocationField && deliveryMethod.value === 'center' && item.el.value.trim() === '') {
+                item.el.classList.remove('invalid');
+                const err = item.el.parentNode.querySelector('.error-message');
+                if (err) {
+                    err.textContent = '';
+                    err.style.display = 'none';
+                }
+                return;
+            }
+            validateField(item.el, item.pattern, item.msg);
+        });
+
+        item.el.addEventListener('input', () => {
+            checkFormValidity();
+            if (item.el.classList.contains('invalid')) {
+                if (isLocationField && deliveryMethod.value === 'center' && item.el.value.trim() === '') {
+                    item.el.classList.remove('invalid');
+                    const err = item.el.parentNode.querySelector('.error-message');
+                    if (err) {
+                        err.textContent = '';
+                        err.style.display = 'none';
+                    }
+                } else {
+                    validateField(item.el, item.pattern, item.msg);
+                }
+            }
+        });
+    });
+
+    [wilaya, municipality, payment].forEach(el => {
+        el.addEventListener('change', checkFormValidity);
+    });
+
+    deliveryMethod.addEventListener('change', () => {
+        if (deliveryMethod.value === 'center' && location.value.trim() === '') {
+            location.classList.remove('invalid');
+            const err = location.parentNode.querySelector('.error-message');
+            if (err) {
+                err.textContent = '';
+                err.style.display = 'none';
+            }
+        }
+        checkFormValidity();
+    });
+
+    form.addEventListener('checkout:validate', checkFormValidity);
+
+    checkFormValidity();
+}
+
+window.refreshCheckoutValidation = function () {
+    const form = document.getElementById('checkout-form');
+    if (form) form.dispatchEvent(new Event('checkout:validate'));
+};
+
 // Auto-initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     setupLoginValidation();
     setupRegisterValidation();
+    setupCheckoutValidation();
 });

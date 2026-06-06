@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clothes Store</title>
+    <title>Equinox Store</title>
     <link rel="stylesheet" href="index.css">
     <script src="theme.js"></script>
     <script src="common.js" defer></script>
@@ -14,9 +14,9 @@
     <!-- Navbar with Hamburger Button -->
     <nav class="navbar">
       <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
-      <a href="index.html" class="logo-link"><h1 class="logo">Clothes Store</h1></a>
+      <a href="index.html" class="logo-link"><h1 class="logo">Equinox Store</h1></a>
       <div class="navbar-search">
-        <form class="search-form" action="products.html" method="GET">
+        <form class="search-form" action="catalog.html" method="GET">
           <input type="search" name="search" class="search-input" id="navbar-search-input" placeholder="Search clothes..." aria-label="Search clothes">
           <button type="submit" class="search-btn" aria-label="Search">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -27,14 +27,22 @@
         </form>
       </div>
       <div class="navbar-right">
+        <div class="cart-icon-wrapper" onclick="window.location.href='cart.html'" title="View Cart">
+          <svg class="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge">0</span>
+        </div>
         <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
           <div class="theme-toggle-inner">
             <div class="theme-toggle-front">☀️</div>
             <div class="theme-toggle-back">❄️</div>
           </div>
         </button>
-        <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 520, 800)">Login</a>
-        <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 520, 800)">Register</a>
+        <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'login', 520, 800)">Login</a>
+        <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'register', 550, 950)">Register</a>
       </div>
     </nav>
 
@@ -45,7 +53,8 @@
       </div>
       <nav class="sidebar-nav">
         <a href="#home">Home</a>
-        <a href="products.html">Products</a>
+        <a href="products.html">Catalog</a>
+        <a href="orders.html">Receipts</a>
         <a href="#about">About Us</a>
       </nav>
     </aside>
@@ -56,8 +65,8 @@
         <div class="hero-layout">
           <!-- Seasonal Vertical Image (Now on the left) -->
           <aside class="seasonal-vertical-image">
-            <img src="images/other media/misty-mountain-peaks-stockcake.webp" alt="Winter Scene" class="winter-img">
-            <img src="images/other media/pngtree-summer-travel-destination-background-beach-scene-sun-beds-umbrella-and-palm-image_16266248.jpg" alt="Summer Scene" class="summer-img">
+            <img src="images/other media/mountain1.webp" alt="Winter Scene" class="winter-img">
+            <img src="images/other media/sea1.webp" alt="Summer Scene" class="summer-img">
           </aside>
 
           <!-- Hero Text Content (Now on the right) -->
@@ -76,15 +85,58 @@
           </section>
         </div>
 
+        <!-- Category Macro-Grid -->
+        <section class="category-macro-grid">
+          <div class="category-left" id="category-capsule-grid">
+            <!-- Buttons injected by index.js -->
+          </div>
+          <div class="category-right">
+            <a href="products.html?view=all" class="catalog-button">View Full Catalog</a>
+          </div>
+        </section>
+
         <!-- Seasonal Product Slider -->
         <section class="seasonal-slider-section">
-          <h3 id="seasonal-title">Trending This Season</h3>
+          <div class="slider-header-wrap">
+            <h3 id="seasonal-title">Trending This Season</h3>
+            <a href="catalog.html" class="view-more-link">
+              View More
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+          
           <div class="slider-wrapper">
             <button class="slider-arrow left" id="slider-prev" aria-label="Previous products">❮</button>
             <div id="seasonal-slider" class="product-slider">
               <!-- Seasonal products will be injected here -->
             </div>
             <button class="slider-arrow right" id="slider-next" aria-label="Next products">❯</button>
+          </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section class="about-us-section" id="about">
+          <div class="about-us-container">
+            <div class="about-us-title-col">
+              <h2>About Us</h2>
+              <div class="title-accent-line"></div>
+            </div>
+            <div class="about-us-content-col">
+              <p class="brand-statement">
+                At Equinox, we believe your wardrobe shouldn't be defined by a single setting. 
+                Inspired by the natural transitions of our planet, we design premium apparel 
+                that adapts gracefully to every shift in the atmosphere.
+              </p>
+              <p class="brand-details">
+                From the light, breathable linen textures of sun-drenched afternoons to the structured, 
+                insulated layers needed to brave a sudden winter frost, Equinox crafts pieces that 
+                balance absolute comfort with sharp, modern tailoring. Wherever the seasons take you, 
+                we have the layers to match.
+              </p>
+            </div>
           </div>
         </section>
       </div>

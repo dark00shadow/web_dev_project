@@ -1,4 +1,4 @@
-/* products.js - Specific logic for products page */
+/* catalog.js - Specific logic for catalog page */
 
 /* ── Season icon helper ── */
 function seasonIcon(season) {

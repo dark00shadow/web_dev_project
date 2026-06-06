@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Products — Clothes Store</title>
+  <title>Catalog — Equinox Store</title>
   <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="products.css">
   <script src="theme.js"></script>
@@ -18,9 +18,9 @@
   <!-- ── Navbar ── -->
   <nav class="navbar">
     <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
-    <a href="index.html" class="logo-link"><h1 class="logo">Clothes Store</h1></a>
+    <a href="index.html" class="logo-link"><h1 class="logo">Equinox Store</h1></a>
     <div class="navbar-search">
-      <form class="search-form" action="products.html" method="GET">
+      <form class="search-form" action="catalog.html" method="GET">
         <input type="search" name="search" class="search-input" id="navbar-search-input" placeholder="Search clothes..." aria-label="Search clothes">
         <button type="submit" class="search-btn" aria-label="Search">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -31,14 +31,22 @@
       </form>
     </div>
     <div class="navbar-right">
+      <div class="cart-icon-wrapper" onclick="window.location.href='cart.html'" title="View Cart">
+        <svg class="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-badge">0</span>
+      </div>
       <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
         <div class="theme-toggle-inner">
           <div class="theme-toggle-front">☀️</div>
           <div class="theme-toggle-back">❄️</div>
         </div>
       </button>
-      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'popup', 520, 800)">Login</a>
-      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'popup', 520, 800)">Register</a>
+      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'login', 520, 800)">Login</a>
+      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'register', 550, 950)">Register</a>
     </div>
   </nav>
 
@@ -52,7 +60,7 @@
       </div>
       <nav class="sidebar-nav">
         <a href="index.html">Home</a>
-        <a href="products.html" class="active">Products</a>
+        <a href="catalog.html" class="active">Catalog</a>
         
         <!-- ── Sidebar Filters (Persistent Container, Nested Dropdowns) ── -->
         <div class="sidebar-filters-section" id="filters-main">
@@ -143,7 +151,8 @@
           </div>
         </div>
 
-        <a href="#about">About Us</a>
+        <a href="orders.html">Receipts</a>
+        <a href="index.html#about">About Us</a>
       </nav>
     </aside>
 
@@ -155,21 +164,6 @@
     <h1>Our Collection</h1>
     <p>Discover the latest seasonal styles — from winter warmth to summer breezes.</p>
   </header>
-
-  <!-- ── Filter Bar ── -->
-  <nav class="filter-bar" id="filter-bar" aria-label="Product filters">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="Winter">Winter</button>
-    <button class="filter-btn" data-filter="Summer">Summer</button>
-    <button class="filter-btn" data-filter="Coats">Coats</button>
-    <button class="filter-btn" data-filter="Tops">Tops</button>
-    <button class="filter-btn" data-filter="Shirts">Shirts</button>
-    <button class="filter-btn" data-filter="T-Shirts">T-Shirts</button>
-    <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
-    <button class="filter-btn" data-filter="Dresses">Dresses</button>
-    <button class="filter-btn" data-filter="Accessories">Accessories</button>
-    <button class="filter-btn" data-filter="Sportswear">Sportswear</button>
-  </nav>
 
     <!-- ── Products Grid ── populated by JS from product.json ── -->
       <main class="products-grid" id="products-grid">

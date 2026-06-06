@@ -3,25 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details — Equinox Store</title>
+  <title>Confirmed Orders — Equinox Store</title>
   <link rel="stylesheet" href="index.css">
-  <link rel="stylesheet" href="product-details.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="orders.css">
+  <script src="theme.js"></script>
   <script src="common.js" defer></script>
-  <script src="product-details.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="orders.js" defer></script>
 </head>
-<body class="details-page">
-
-  <!-- Navbar -->
+<body class="orders-page">
   <nav class="navbar">
     <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
     <a href="index.html" class="logo-link"><h1 class="logo">Equinox Store</h1></a>
     <div class="navbar-search">
-      <form class="search-form" action="catalog.html" method="GET">
-        <input type="search" name="search" class="search-input" placeholder="Search clothes..." aria-label="Search">
-        <button type="submit" class="search-btn">
+      <form class="search-form" action="products.html" method="GET">
+        <input type="search" name="search" class="search-input" placeholder="Search clothes..." aria-label="Search clothes">
+        <button type="submit" class="search-btn" aria-label="Search">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -38,7 +35,7 @@
         </svg>
         <span class="cart-badge">0</span>
       </div>
-      <button id="theme-toggle" class="theme-toggle-btn">
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
         <div class="theme-toggle-inner">
           <div class="theme-toggle-front">☀️</div>
           <div class="theme-toggle-back">❄️</div>
@@ -49,38 +46,32 @@
     </div>
   </nav>
 
-  <!-- Sidebar -->
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+      <button class="close-btn" aria-label="Close menu" onclick="toggleSidebar()">&times;</button>
     </div>
     <nav class="sidebar-nav">
       <a href="index.html">Home</a>
       <a href="products.html">Catalog</a>
-      <a href="orders.html">Receipts</a>
-      <hr>
+      <a href="orders.html" class="active">Receipts</a>
       <a href="index.html#about">About Us</a>
     </nav>
   </aside>
 
-  <main class="details-page-content">
-    <!-- Product Details Container -->
-    <section class="details-container" id="details-view">
-      <!-- Injected by product-details.js -->
-    </section>
+  <main class="content orders-main">
+    <div class="orders-container">
+      <header class="orders-hero">
+        <h1>Your Purchase History</h1>
+        <p>Review your past orders and download your receipts.</p>
+      </header>
 
-    <!-- Similar Products Slider -->
-    <section class="seasonal-slider-section" id="similar-section" style="display: none;">
-      <h3 id="similar-title">Similar Products</h3>
-      <div class="slider-wrapper" id="similar-wrapper"></div>
-    </section>
+      <div id="orders-list" class="orders-list" aria-live="polite"></div>
 
-    <!-- Other Seasonal Products Slider -->
-    <section class="seasonal-slider-section" id="seasonal-section" style="display: none;">
-      <h3 id="seasonal-title">Other Seasonal Products</h3>
-      <div class="slider-wrapper" id="seasonal-wrapper"></div>
-    </section>
+      <div class="orders-actions">
+        <button id="download-history-btn" class="orders-continue-btn">Download PDF History</button>
+        <a href="products.html" class="orders-continue-btn">Continue Shopping</a>
+      </div>
+    </div>
   </main>
-
 </body>
 </html>
