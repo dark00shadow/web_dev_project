@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Catalog — Equinox Store</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="products.css">
+  <link rel="stylesheet" href="mobile.css">
+  <script src="theme.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="common.js" defer></script>
+  <script src="products.js" defer></script>
+</head>
+<body class="products-page">
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar">
+    <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
+    <a href="index.html" class="logo-link"><h1 class="logo">Equinox <span class="logo-store-text">Store</span></h1></a>
+    <div class="navbar-search">
+      <form class="search-form" action="products.html" method="GET">
+        <input type="search" name="search" class="search-input" id="navbar-search-input" placeholder="Search clothes..." aria-label="Search clothes">
+        <button type="submit" class="search-btn" aria-label="Search">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
+    <div class="navbar-right">
+      <div class="cart-icon-wrapper" onclick="window.location.href='cart.html'" title="View Cart">
+        <svg class="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-badge">0</span>
+      </div>
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <div class="theme-toggle-inner">
+          <div class="theme-toggle-front">☀️</div>
+          <div class="theme-toggle-back">❄️</div>
+        </div>
+      </button>
+      <a href="#" class="nav-btn" onclick="openCenteredPopup('login.html', 'login', 520, 800)">Login</a>
+      <a href="#" class="nav-btn primary" onclick="openCenteredPopup('register.html', 'register', 550, 950)">Register</a>
+    </div>
+  </nav>
+
+  <!-- ── Page Layout: Permanent Sidebar + Main Content ── -->
+  <div class="page-layout">
+
+    <!-- ── Permanent Sidebar (desktop only) ── -->
+    <aside id="sidebar" class="sidebar products-sidebar">
+      <div class="sidebar-header">
+        <button class="close-btn mobile-only" aria-label="Close menu" onclick="toggleSidebar()">&times;</button>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Catalog</a>
+        
+        <!-- ── Sidebar Filters (Persistent Container, Nested Dropdowns) ── -->
+        <div class="sidebar-filters-section" id="filters-main">
+          <div class="filter-header">
+            <h3 class="filter-section-title">Filters</h3>
+            <button class="reset-filters-btn" id="reset-filters" aria-label="Reset all filters">Reset</button>
+          </div>
+          
+          <!-- Season Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('season-content')">
+              Season <span class="arrow">▼</span>
+            </button>
+            <div id="season-content" class="dropdown-content">
+              <div class="filter-list" id="season-filter-list">
+                <button class="filter-item active" data-season="all">All Seasons</button>
+                <button class="filter-item" data-season="Winter">Winter</button>
+                <button class="filter-item" data-season="Summer">Summer</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Categories Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('categories-content')">
+              Categories <span class="arrow">▼</span>
+            </button>
+            <div id="categories-content" class="dropdown-content">
+              <div class="filter-list" id="category-filter-list">
+                <button class="filter-item" data-category="Coats">Coats</button>
+                <button class="filter-item" data-category="Tops">Tops</button>
+                <button class="filter-item" data-category="Shirts">Shirts</button>
+                <button class="filter-item" data-category="T-Shirts">T-Shirts</button>
+                <button class="filter-item" data-category="Bottoms">Bottoms</button>
+                <button class="filter-item" data-category="Dresses">Dresses</button>
+                <button class="filter-item" data-category="Accessories">Accessories</button>
+                <button class="filter-item" data-category="Sportswear">Sportswear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Size Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('size-content')">
+              Sizes <span class="arrow">▼</span>
+            </button>
+            <div id="size-content" class="dropdown-content">
+              <div class="filter-list" id="size-filter-list">
+                <button class="filter-item active" data-size="all">All Sizes</button>
+                <button class="filter-item" data-size="S">S</button>
+                <button class="filter-item" data-size="M">M</button>
+                <button class="filter-item" data-size="L">L</button>
+                <button class="filter-item" data-size="XL">XL</button>
+                <button class="filter-item" data-size="XXL">XXL</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gender Dropdown -->
+          <div class="filter-group indented">
+            <button class="dropdown-btn" onclick="toggleDropdown('gender-content')">
+              Gender <span class="arrow">▼</span>
+            </button>
+            <div id="gender-content" class="dropdown-content">
+              <div class="filter-list" id="gender-filter-list">
+                <button class="filter-item" data-gender="male">Male</button>
+                <button class="filter-item" data-gender="female">Female</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price Range Filter (Numeric Inputs) -->
+          <div class="filter-group indented">
+            <h4 class="filter-group-title">Price Range</h4>
+            <div class="price-filter-container">
+              <div class="price-inputs">
+                <div class="input-wrap">
+                  <span>$</span>
+                  <input type="number" id="price-min" placeholder="Min" min="0" value="0" step="10">
+                </div>
+                <span class="separator">-</span>
+                <div class="input-wrap">
+                  <span>$</span>
+                  <input type="number" id="price-max" placeholder="Max" min="0" value="500" step="10">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="orders.html">Receipts</a>
+        <a href="index.html#about">About Us</a>
+        <hr class="mobile-only-divider">
+        <div class="sidebar-auth-buttons">
+          <a href="#" class="sidebar-auth-btn login-btn" onclick="openCenteredPopup('login.html', 'login', 520, 800)">Login</a>
+          <a href="#" class="sidebar-auth-btn register-btn" onclick="openCenteredPopup('register.html', 'register', 550, 950)">Register</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ── Right Side: Header + Filters + Grid ── -->
+    <div class="products-main">
+
+  <!-- ── Page Header ── -->
+  <header class="products-header">
+    <nav class="mobile-category-nav" id="mobile-category-nav" aria-label="Browse categories"></nav>
+    <h1 id="products-page-title">Our Collection</h1>
+    <p id="products-page-subtitle">Discover the latest seasonal styles — from winter warmth to summer breezes.</p>
+    <span class="products-result-count" id="products-result-count" aria-live="polite"></span>
+  </header>
+
+    <!-- ── Products Grid ── populated by JS from product.json ── -->
+      <main class="products-grid" id="products-grid">
+        <!-- Cards are injected here by products.js -->
+      </main>
+
+    </div><!-- /.products-main -->
+  </div><!-- /.page-layout -->
+
+  <!-- ── Mobile Add-to-Cart Bottom Sheet ── -->
+  <div class="mobile-cart-sheet" id="mobile-cart-sheet" aria-hidden="true">
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+    <div class="sheet-panel" role="dialog" aria-labelledby="sheet-product-name">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <p class="sheet-product-name" id="sheet-product-name"></p>
+      <p class="sheet-product-price" id="sheet-product-price"></p>
+      <div class="selector-group">
+        <label>Size</label>
+        <div class="size-options" id="sheet-size-options"></div>
+      </div>
+      <div class="selector-group">
+        <label>Quantity</label>
+        <div class="qty-counter">
+          <button type="button" class="qty-btn-flip minus" id="sheet-qty-minus">−</button>
+          <input type="number" value="1" min="1" class="qty-input-flip" id="sheet-qty-input" readonly>
+          <button type="button" class="qty-btn-flip plus" id="sheet-qty-plus">+</button>
+        </div>
+        <span class="stock-hint">Available: <span id="sheet-stock-num">0</span></span>
+      </div>
+      <div class="sheet-actions">
+        <button type="button" class="btn-confirm-cart" id="sheet-confirm-btn">Add to Cart</button>
+        <button type="button" class="btn-cancel-flip" id="sheet-cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
