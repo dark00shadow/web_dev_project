@@ -49,6 +49,23 @@
     display: none !important;
   }
 
+  /* Hide user greeting text on navbar mobile, keep only profile icon */
+  .navbar .user-greeting {
+    display: none !important;
+  }
+
+  /* Keep user greeting in sidebar on mobile */
+  .sidebar .user-greeting {
+    display: block !important;
+  }
+
+  /* Make sidebar profile icon bigger on mobile */
+  .sidebar .profile-icon {
+    width: 40px !important;
+    height: 40px !important;
+    padding: 8px !important;
+  }
+
   /* Keep Logo visible and styled cleanly */
   .logo-link {
     display: flex !important;

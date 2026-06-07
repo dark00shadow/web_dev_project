@@ -175,6 +175,24 @@ body.details-page {
   transform: rotate(180deg);
 }
 
+/* Filter count badge */
+.filter-count-badge {
+  background: var(--accent-winter);
+  color: #1a1a1a;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  min-width: 16px;
+  text-align: center;
+  display: none;
+}
+
+.filter-count-badge.show {
+  display: inline-block;
+}
+
 .dropdown-content {
   display: none;
   background: rgba(0, 0, 0, 0.15);

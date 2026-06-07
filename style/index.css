@@ -309,23 +309,28 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
+  padding: 0;
+  background: none;
+  border: none;
   transition: background 0.3s, border-color 0.3s;
   cursor: pointer;
 }
 
 .profile-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: var(--accent-winter);
+  background: none;
+  border-color: transparent;
 }
 
 .profile-icon {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   color: var(--main-text);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-greeting {

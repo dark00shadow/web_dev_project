@@ -42,7 +42,7 @@ async function loadSeasonalProducts() {
     renderCategoryGrid(); // Refresh macro-grid categories to match season
 
     try {
-        const response = await fetch("../json/product.json");
+        const response = await fetch("json/product.json");
         const data = await response.json();
         const allProducts = data.products;
         
