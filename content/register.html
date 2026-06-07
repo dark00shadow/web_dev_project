@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Register</title>
+  <link rel="stylesheet" href="../style/index.css">
+  <link rel="stylesheet" href="../style/register.css">
+  <link rel="stylesheet" href="../style/mobile.css">
+  <script src="../javascript/theme.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="../javascript/users-db.js?v=2"></script>
+  <script src="../javascript/common.js" defer></script>
+  <script src="../javascript/validation.js" defer></script>
+  <script src="../javascript/register.js" defer></script>
+</head>
+<body class="register-page">
+  <!-- Navbar with Hamburger Button -->
+  <nav class="navbar">
+    <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
+    <a href="#" class="logo-link" onclick="navigateParent('../index.html')"><h1 class="logo">Equinox <span class="logo-store-text">Store</span></h1></a>
+    <div class="navbar-right">
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <div class="theme-toggle-inner">
+          <div class="theme-toggle-front">☀️</div>
+          <div class="theme-toggle-back">❄️</div>
+        </div>
+      </button>
+      <div class="auth-buttons">
+        <a href="login.html" class="nav-btn">Login</a>
+        <a href="register.html" class="nav-btn primary">Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sliding Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <button class="close-btn" aria-label="Close menu" onclick="toggleSidebar()">&times;</button>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-auth-buttons">
+        <a href="#" class="sidebar-auth-btn login-btn" onclick="openCenteredPopup('login.html', 'login', 520, 800)">Login</a>
+        <a href="#" class="sidebar-auth-btn register-btn" onclick="openCenteredPopup('register.html', 'register', 550, 950)">Register</a>
+      </div>
+      <hr class="mobile-only-divider">
+      <a href="#" onclick="navigateParent('../index.html')">Home</a>
+      <a href="#" onclick="navigateParent('products.html')">Catalog</a>
+      <a href="#" onclick="navigateParent('orders.html')">Receipts</a>
+      <a href="#" onclick="navigateParent('../index.html#about')">About Us</a>
+    </nav>
+  </aside>
+
+  <main class="register-card">
+    <header class="register-header">
+      <h3>Create Account</h3>
+      <p>Join us to get started.</p>
+    </header>
+    
+    <form action="register.html" novalidate>
+      <div class="input-row">
+        <div class="input-group">
+          <label for="fname">Family Name</label>
+          <input type="text" name="fname" id="fname" placeholder="Family name" required>
+        </div>
+        <div class="input-group">
+          <label for="prenom">Name</label>
+          <input type="text" name="prenom" id="prenom" placeholder="Name" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="email@example.com" required>
+      </div>
+
+      <div class="input-group">
+        <label for="number">Phone Number</label>
+        <input type="tel" name="number" id="number" placeholder="0XXXXXXXXX" maxlength="10" required>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label for="pass">Password</label>
+          <div class="password-wrapper">
+            <input type="password" name="pass" id="pass" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Visibility"></span>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="pass_word">Confirm</label>
+          <div class="password-wrapper">
+            <input type="password" name="pass_word" id="pass_word" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Visibility"></span>
+          </div>
+        </div>
+      </div>
+
+      <section class="gender-section">
+        <h4 class="section-title">Gender</h4>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="gender" id="male" value="M" checked>
+            <span>Male</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="gender" id="female" value="F">
+            <span>Female</span>
+          </label>
+        </div>
+      </section>
+      
+      <button type="submit" class="submit-btn">Register</button>
+      
+      <p class="login-prompt">
+        Already have an account? <a href="login.html">Login</a>
+      </p>
+    </form>
+  </main>
+</body>
+</html>

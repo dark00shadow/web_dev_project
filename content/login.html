@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Login page</title>
+    <link rel="stylesheet" href="../style/index.css">
+    <link rel="stylesheet" href="../style/login.css">
+    <link rel="stylesheet" href="../style/mobile.css">
+    <!-- Using a modern Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../javascript/theme.js"></script>
+    <script src="../javascript/users-db.js?v=2"></script>
+    <script src="../javascript/common.js" defer></script>
+    <script src="../javascript/validation.js" defer></script>
+    <script src="../javascript/login.js" defer></script>
+  </head>
+
+  <body class="login-page">
+    <!-- Navbar with Hamburger Button -->
+    <nav class="navbar">
+      <button class="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">&#9776;</button>
+      <a href="#" class="logo-link" onclick="navigateParent('../index.html')"><h1 class="logo">Equinox <span class="logo-store-text">Store</span></h1></a>
+      <div class="navbar-right">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <div class="theme-toggle-inner">
+            <div class="theme-toggle-front">☀️</div>
+            <div class="theme-toggle-back">❄️</div>
+          </div>
+        </button>
+        <div class="auth-buttons">
+          <a href="login.html" class="nav-btn">Login</a>
+          <a href="register.html" class="nav-btn primary">Register</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sliding Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <button class="close-btn" aria-label="Close menu" onclick="toggleSidebar()">&times;</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-auth-buttons">
+          <a href="#" class="sidebar-auth-btn login-btn" onclick="openCenteredPopup('login.html', 'login', 520, 800)">Login</a>
+          <a href="#" class="sidebar-auth-btn register-btn" onclick="openCenteredPopup('register.html', 'register', 550, 950)">Register</a>
+        </div>
+        <hr class="mobile-only-divider">
+        <a href="#" onclick="navigateParent('../index.html')">Home</a>
+        <a href="#" onclick="navigateParent('products.html')">Catalog</a>
+        <a href="#" onclick="navigateParent('orders.html')">Receipts</a>
+        <a href="#" onclick="navigateParent('../index.html#about')">About Us</a>
+      </nav>
+    </aside>
+
+    <main class="login-card">
+      <header class="login-header">
+        <h3>Welcome Back</h3>
+        <p>Please enter your details to sign in.</p>
+      </header>
+      
+      <form action="login.html" novalidate>
+        <div class="input-group">
+          <label for="username">Email</label>
+          <input type="email" name="user" id="username" placeholder="Enter your email" autofocus required>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" name="pass" id="password" placeholder="••••••••" required>
+            <span class="password-toggle" title="Toggle Visibility"></span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="remember-me">
+            <input type="checkbox" name="remember" id="remember">
+            <label for="remember">Remember me</label>
+          </div>
+          <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+        
+        <!-- Changed to an actual submit button -->
+        <button type="submit" class="submit-btn">Sign In</button>
+        
+        <p class="register-prompt">
+          New here? <a href="register.html">Create an account</a>
+        </p>
+      </form>
+    </main>
+  </body>
+</html>

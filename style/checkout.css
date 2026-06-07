@@ -1,0 +1,368 @@
+/* checkout.css — Equinox Store checkout page (dual-theme glass card) */
+
+body.checkout-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 80px 10px 20px !important;
+  min-height: unset;
+  overflow-y: auto;
+}
+
+.checkout-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.checkout-header h3 {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--main-text);
+  margin-bottom: 6px;
+}
+
+.checkout-header p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+#checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-row {
+  display: flex;
+  gap: 15px;
+}
+
+.input-row .input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--main-text);
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(162, 210, 255, 0.3);
+  background: rgba(0, 82, 82, 0.4);
+  color: var(--main-text);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A2D2FF' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.input-group input {
+  cursor: text;
+  background-image: none;
+  padding-right: 14px;
+}
+
+[data-theme="summer"] .input-group input,
+[data-theme="summer"] .input-group select {
+  border-color: rgba(0, 102, 102, 0.25);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="summer"] .input-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23006666' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+}
+
+.input-group input::placeholder {
+  color: var(--text-muted-heavy);
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--accent-winter);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.input-group select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.input-group select option {
+  background: var(--primary-bg);
+  color: var(--main-text);
+}
+
+/* ── Custom location dropdowns (wilaya & municipality) ── */
+.location-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.location-dropdown {
+  position: relative;
+}
+
+.location-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(162, 210, 255, 0.3);
+  background: rgba(0, 82, 82, 0.4);
+  color: var(--main-text);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+}
+
+[data-theme="summer"] .location-dropdown-trigger {
+  border-color: rgba(0, 102, 102, 0.25);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.location-dropdown-trigger:hover:not(:disabled),
+.location-dropdown.open .location-dropdown-trigger {
+  border-color: var(--accent-winter);
+}
+
+.location-dropdown-trigger:focus-visible {
+  border-color: var(--accent-winter);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.location-dropdown-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.location-dropdown-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.location-dropdown-chevron {
+  flex-shrink: 0;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A2D2FF' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.2s ease;
+}
+
+[data-theme="summer"] .location-dropdown-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23006666' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+}
+
+.location-dropdown.open .location-dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.location-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: calc(5 * (2.625rem + 5px));
+  overflow-y: auto;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--primary-bg);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-winter) transparent;
+}
+
+.location-dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.location-dropdown-menu::-webkit-scrollbar-thumb {
+  background: var(--accent-winter);
+  border-radius: 3px;
+}
+
+.location-dropdown-item {
+  padding: 10px 12px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--main-text);
+  font-size: 14px;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.location-dropdown-item:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.location-dropdown-item:hover {
+  background: var(--accent-winter-soft);
+}
+
+.location-dropdown-item.selected {
+  background: var(--accent-winter-soft);
+  color: var(--accent-winter);
+  font-weight: 600;
+}
+
+[data-theme="summer"] .location-dropdown-item.selected {
+  color: var(--accent-highlight);
+}
+
+.municipality-group {
+  transition: opacity 0.25s ease, max-height 0.25s ease;
+}
+
+.municipality-group.hidden {
+  display: none;
+}
+
+.checkout-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  flex-direction: column-reverse;
+}
+
+.back-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--main-text);
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.back-btn:hover {
+  background: var(--accent-winter-soft);
+  border-color: var(--accent-winter);
+  color: var(--accent-winter);
+}
+
+.submit-btn {
+  width: 100%;
+  background-color: var(--accent-winter);
+  color: #F0F0F0;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px var(--register-glow, rgba(162, 210, 255, 0.35));
+  opacity: 0.92;
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Validation feedback (scoped to checkout form) ── */
+#checkout-form .error-message {
+  color: var(--accent-highlight);
+  font-size: 11px;
+  margin-top: 4px;
+  text-align: left;
+}
+
+#checkout-form input.invalid,
+#checkout-form select.invalid,
+#checkout-form .location-dropdown-trigger.invalid {
+  border-color: var(--accent-highlight) !important;
+  box-shadow: 0 0 0 2px var(--register-glow, rgba(239, 157, 113, 0.35)) !important;
+}
+
+#payment-error {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  body.checkout-page {
+    padding-top: 60px;
+    padding-bottom: 20px;
+  }
+
+  .checkout-card {
+    width: 92%;
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .input-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .checkout-header h3 {
+    font-size: 22px;
+  }
+}
