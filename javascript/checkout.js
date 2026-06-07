@@ -244,22 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
         municipalitySelect.dispatchEvent(new Event('change'));
     });
 
-    // Get stock from localStorage for a product
-    function getProductStock(productId) {
-        const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-        return stockData[productId] || {};
-    }
-
-    // Update stock in localStorage for a product
-    function updateProductStock(productId, size, quantity) {
-        const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-        if (stockData[productId] && stockData[productId][size] !== undefined) {
-            stockData[productId][size] -= quantity;
-            if (stockData[productId][size] < 0) stockData[productId][size] = 0;
-            localStorage.setItem('equinox-stock', JSON.stringify(stockData));
-        }
-    }
-
     async function buildOrderFromCart() {
         const cart = getCheckoutCart();
         if (!cart.length) return null;
@@ -313,11 +297,6 @@ document.addEventListener("DOMContentLoaded", () => {
             showToast('Your cart is empty.');
             return;
         }
-
-        // Decrease stock in localStorage for each item in the order
-        orderData.items.forEach(item => {
-            updateProductStock(item.id, item.size, item.qty);
-        });
 
         const order = saveConfirmedOrder(orderData);
         clearCheckoutCart();

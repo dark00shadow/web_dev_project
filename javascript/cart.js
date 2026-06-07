@@ -3,31 +3,6 @@
 let allProducts = [];
 let cart = [];
 
-// Get stock from localStorage for a product
-function getProductStock(productId) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    return stockData[productId] || {};
-}
-
-// Update stock in localStorage for a product
-function updateProductStock(productId, size, quantity) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    if (stockData[productId] && stockData[productId][size] !== undefined) {
-        stockData[productId][size] -= quantity;
-        if (stockData[productId][size] < 0) stockData[productId][size] = 0;
-        localStorage.setItem('equinox-stock', JSON.stringify(stockData));
-    }
-}
-
-// Restore stock in localStorage for a product (when item removed from cart)
-function restoreProductStock(productId, size, quantity) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    if (stockData[productId] && stockData[productId][size] !== undefined) {
-        stockData[productId][size] += quantity;
-        localStorage.setItem('equinox-stock', JSON.stringify(stockData));
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     fetch("../json/product.json")
         .then(response => response.json())
@@ -150,11 +125,6 @@ window.updateQty = function(id, size, delta) {
 };
 
 window.removeCartItem = function(id, size) {
-    const item = cart.find(i => i.id === id && i.size === size);
-    if (item) {
-        // Restore stock when item is removed from cart
-        restoreProductStock(id, size, item.qty);
-    }
     cart = cart.filter(item => !(item.id === id && item.size === size));
     localStorage.setItem('equinox-cart', JSON.stringify(cart));
     renderCart();

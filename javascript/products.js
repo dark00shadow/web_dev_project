@@ -19,13 +19,10 @@ function isMobileView() {
 /* ── Render a single product card ── */
 function renderCard(product) {
     const seasonClass = product.season.toLowerCase();
-    // Get stock from localStorage
-    const stockFromStorage = getProductStock(product.id);
-    const sizesToUse = Object.keys(stockFromStorage).length > 0 ? stockFromStorage : product.sizes;
-    const totalStock = sizesToUse ? Object.values(sizesToUse).reduce((sum, qty) => sum + qty, 0) : 0;
+    const totalStock = product.sizes ? Object.values(product.sizes).reduce((sum, qty) => sum + qty, 0) : 0;
 
     // Prepare size options for the back side
-    const availableSizes = sizesToUse ? Object.entries(sizesToUse).filter(([_, qty]) => qty > 0) : [];
+    const availableSizes = product.sizes ? Object.entries(product.sizes).filter(([_, qty]) => qty > 0) : [];
     const sizeButtons = availableSizes.map(([size, qty], idx) => 
         `<button type="button" class="size-btn ${idx === 0 ? 'active' : ''}" data-size="${size}" data-stock="${qty}">${size}</button>`
     ).join('');
@@ -102,46 +99,10 @@ function renderCard(product) {
 let allProducts = [];
 let defaultMaxPrice = 500;
 
-// Initialize stock from product.json to localStorage if not exists
-function initializeStock() {
-    const existingStock = localStorage.getItem('equinox-stock');
-    if (!existingStock) {
-        fetch("../json/product.json")
-            .then(response => response.json())
-            .then(data => {
-                const stockData = {};
-                data.products.forEach(product => {
-                    stockData[product.id] = { ...product.sizes };
-                });
-                localStorage.setItem('equinox-stock', JSON.stringify(stockData));
-            })
-            .catch(err => console.error("Failed to initialize stock:", err));
-    }
-}
-
-// Get stock from localStorage for a product
-function getProductStock(productId) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    return stockData[productId] || {};
-}
-
-// Update stock in localStorage for a product
-function updateProductStock(productId, size, quantity) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    if (stockData[productId] && stockData[productId][size] !== undefined) {
-        stockData[productId][size] -= quantity;
-        if (stockData[productId][size] < 0) stockData[productId][size] = 0;
-        localStorage.setItem('equinox-stock', JSON.stringify(stockData));
-    }
-}
-
 fetch("../json/product.json")
     .then(response => response.json())
     .then(data => {
         allProducts = data.products;
-        
-        // Initialize stock on first load
-        initializeStock();
         
         /* Initialize price range max based on data */
         const maxPriceInDB = Math.max(...allProducts.map(p => p.price));
@@ -312,13 +273,8 @@ function confirmMobileCartSheet() {
     const selectedQty = parseInt(qtyInput.value, 10);
     const product = mobileSheetProduct;
 
-    // Get current stock from localStorage
-    const currentStock = getProductStock(product.id);
-    const availableStock = currentStock[selectedSize] !== undefined ? currentStock[selectedSize] : product.sizes[selectedSize];
-
-    if (availableStock >= selectedQty) {
-        // Update stock in localStorage
-        updateProductStock(product.id, selectedSize, selectedQty);
+    if (product.sizes[selectedSize] >= selectedQty) {
+        product.sizes[selectedSize] -= selectedQty;
         addToLocalCart(product.id, product.name, selectedSize, selectedQty);
         showToast(`Added ${selectedQty} × "${product.name}" (${selectedSize}) to cart.`);
         closeMobileCartSheet();
@@ -834,13 +790,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 const qtyInput = container.querySelector(".qty-input-flip");
                 const selectedQty = parseInt(qtyInput.value, 10);
                 
-                // Get current stock from localStorage
-                const currentStock = getProductStock(product.id);
-                const availableStock = currentStock[selectedSize] !== undefined ? currentStock[selectedSize] : product.sizes[selectedSize];
-                
-                if (availableStock >= selectedQty) {
-                    // Update stock in localStorage
-                    updateProductStock(product.id, selectedSize, selectedQty);
+                if (product.sizes[selectedSize] >= selectedQty) {
+                    product.sizes[selectedSize] -= selectedQty;
                     addToLocalCart(product.id, product.name, selectedSize, selectedQty);
                     showToast(`Added ${selectedQty} × "${product.name}" (${selectedSize}) to cart.`);
                     renderGrid();

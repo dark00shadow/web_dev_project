@@ -2,22 +2,6 @@
 
 let allProducts = [];
 
-// Get stock from localStorage for a product
-function getProductStock(productId) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    return stockData[productId] || {};
-}
-
-// Update stock in localStorage for a product
-function updateProductStock(productId, size, quantity) {
-    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
-    if (stockData[productId] && stockData[productId][size] !== undefined) {
-        stockData[productId][size] -= quantity;
-        if (stockData[productId][size] < 0) stockData[productId][size] = 0;
-        localStorage.setItem('equinox-stock', JSON.stringify(stockData));
-    }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
@@ -65,12 +49,8 @@ function renderProductDetails(product) {
     const container = document.getElementById('details-view');
     if (!container) return;
 
-    // Get stock from localStorage
-    const stockFromStorage = getProductStock(product.id);
-    const sizesToUse = Object.keys(stockFromStorage).length > 0 ? stockFromStorage : product.sizes;
-
     // Extract available sizes as buttons
-    const availableSizes = sizesToUse ? Object.entries(sizesToUse).filter(([_, qty]) => qty > 0) : [];
+    const availableSizes = product.sizes ? Object.entries(product.sizes).filter(([_, qty]) => qty > 0) : [];
     const sizeButtons = availableSizes.map(([size, qty], idx) => 
         `<button type="button" class="size-btn ${idx === 0 ? 'active' : ''}" data-size="${size}" data-stock="${qty}">${size}</button>`
     ).join('');
@@ -301,13 +281,8 @@ function setupEventListeners(product) {
         const activeSize = activeSizeBtn.dataset.size;
         const qtyToAdd = parseInt(qtyInput.value);
 
-        // Get current stock from localStorage
-        const currentStock = getProductStock(product.id);
-        const availableStock = currentStock[activeSize] !== undefined ? currentStock[activeSize] : product.sizes[activeSize];
-
-        if (availableStock >= qtyToAdd) {
-            // Update stock in localStorage
-            updateProductStock(product.id, activeSize, qtyToAdd);
+        if (product.sizes[activeSize] >= qtyToAdd) {
+            product.sizes[activeSize] -= qtyToAdd;
             addToLocalCart(product.id, product.name, activeSize, qtyToAdd);
             showToast(`Added ${qtyToAdd} × ${product.name} (${activeSize}) to your cart.`);
 
@@ -322,11 +297,7 @@ function setupEventListeners(product) {
         const activeSize = activeSizeBtn.dataset.size;
         const qty = parseInt(qtyInput.value);
 
-        // Get current stock from localStorage
-        const currentStock = getProductStock(product.id);
-        const availableStock = currentStock[activeSize] !== undefined ? currentStock[activeSize] : product.sizes[activeSize];
-
-        if (qty > 0 && availableStock >= qty) {
+        if (qty > 0 && product.sizes[activeSize] >= qty) {
             startBuyNowCheckout(product.id, activeSize, qty);
         }
     });
