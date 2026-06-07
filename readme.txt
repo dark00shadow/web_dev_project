@@ -39,12 +39,11 @@ Membres du groupe
 -----------------
 - Outaleb Zahir
 - Guerrab Said
-- Mouhid Djamila
-- Jackson Michael
+
 
 Organisation du projet
 ----------------------
-Nom1_Nom2_Nom3_.../
+guerrab-said_outaleb-zahir/
 │
 ├── index.html
 ├── content/ (les .html)

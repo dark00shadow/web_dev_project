@@ -1,6 +1,66 @@
 /* common.js - Shared functions across pages */
 
 /**
+ * Initialize stock data from product.json to localStorage
+ * This should be called once when the site loads
+ */
+async function initializeStockFromProductJson() {
+  // Check if stock already exists in localStorage
+  if (localStorage.getItem('equinox-stock')) {
+    return; // Already initialized
+  }
+
+  try {
+    const response = await fetch('json/product.json');
+    const data = await response.json();
+    const products = data.products;
+
+    // Create stock object: { productId: { size: quantity } }
+    const stockData = {};
+    products.forEach(product => {
+      if (product.sizes) {
+        stockData[product.id] = { ...product.sizes };
+      }
+    });
+
+    // Store in localStorage
+    localStorage.setItem('equinox-stock', JSON.stringify(stockData));
+    console.log('Stock initialized from product.json');
+  } catch (err) {
+    console.error('Failed to initialize stock:', err);
+  }
+}
+
+/**
+ * Get stock for a specific product and size from localStorage
+ */
+function getProductStock(productId, size) {
+  try {
+    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
+    return stockData[productId]?.[size] || 0;
+  } catch (err) {
+    console.error('Failed to get stock:', err);
+    return 0;
+  }
+}
+
+/**
+ * Decrease stock for a specific product and size in localStorage
+ */
+function decreaseProductStock(productId, size, quantity) {
+  try {
+    const stockData = JSON.parse(localStorage.getItem('equinox-stock') || '{}');
+    if (stockData[productId] && stockData[productId][size] !== undefined) {
+      stockData[productId][size] = Math.max(0, stockData[productId][size] - quantity);
+      localStorage.setItem('equinox-stock', JSON.stringify(stockData));
+      console.log(`Decreased stock for product ${productId}, size ${size} by ${quantity}`);
+    }
+  } catch (err) {
+    console.error('Failed to decrease stock:', err);
+  }
+}
+
+/**
  * Opens a centered popup window
  * On mobile devices (<= 600px), it navigates in the same window instead.
  */

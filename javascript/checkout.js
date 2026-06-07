@@ -299,6 +299,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const order = saveConfirmedOrder(orderData);
+        
+        // Decrease stock in localStorage for each item in the order
+        const cart = getCheckoutCart();
+        cart.forEach(item => {
+            decreaseProductStock(item.id, item.size, item.qty);
+        });
+        
         clearCheckoutCart();
         
         // Notify opener window to update cart UI if it's still on cart page

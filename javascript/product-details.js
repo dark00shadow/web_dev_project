@@ -49,9 +49,17 @@ function renderProductDetails(product) {
     const container = document.getElementById('details-view');
     if (!container) return;
 
+    // Get stock from localStorage
+    const stockFromStorage = {};
+    if (product.sizes) {
+        Object.keys(product.sizes).forEach(size => {
+            stockFromStorage[size] = getProductStock(product.id, size);
+        });
+    }
+
     // Extract available sizes as buttons
-    const availableSizes = product.sizes ? Object.entries(product.sizes).filter(([_, qty]) => qty > 0) : [];
-    const sizeButtons = availableSizes.map(([size, qty], idx) => 
+    const availableSizes = Object.entries(stockFromStorage).filter(([_, qty]) => qty > 0);
+    const sizeButtons = availableSizes.map(([size, qty], idx) =>
         `<button type="button" class="size-btn ${idx === 0 ? 'active' : ''}" data-size="${size}" data-stock="${qty}">${size}</button>`
     ).join('');
 
@@ -281,8 +289,9 @@ function setupEventListeners(product) {
         const activeSize = activeSizeBtn.dataset.size;
         const qtyToAdd = parseInt(qtyInput.value);
 
-        if (product.sizes[activeSize] >= qtyToAdd) {
-            product.sizes[activeSize] -= qtyToAdd;
+        const currentStock = getProductStock(product.id, activeSize);
+        if (currentStock >= qtyToAdd) {
+            decreaseProductStock(product.id, activeSize, qtyToAdd);
             addToLocalCart(product.id, product.name, activeSize, qtyToAdd);
             showToast(`Added ${qtyToAdd} × ${product.name} (${activeSize}) to your cart.`);
 
@@ -297,7 +306,8 @@ function setupEventListeners(product) {
         const activeSize = activeSizeBtn.dataset.size;
         const qty = parseInt(qtyInput.value);
 
-        if (qty > 0 && product.sizes[activeSize] >= qty) {
+        const currentStock = getProductStock(product.id, activeSize);
+        if (qty > 0 && currentStock >= qty) {
             startBuyNowCheckout(product.id, activeSize, qty);
         }
     });

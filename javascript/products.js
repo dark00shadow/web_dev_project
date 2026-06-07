@@ -19,14 +19,22 @@ function isMobileView() {
 /* ── Render a single product card ── */
 function renderCard(product) {
     const seasonClass = product.season.toLowerCase();
-    const totalStock = product.sizes ? Object.values(product.sizes).reduce((sum, qty) => sum + qty, 0) : 0;
+    
+    // Get stock from localStorage
+    const stockFromStorage = {};
+    if (product.sizes) {
+        Object.keys(product.sizes).forEach(size => {
+            stockFromStorage[size] = getProductStock(product.id, size);
+        });
+    }
+    const totalStock = Object.values(stockFromStorage).reduce((sum, qty) => sum + qty, 0);
 
     // Prepare size options for the back side
-    const availableSizes = product.sizes ? Object.entries(product.sizes).filter(([_, qty]) => qty > 0) : [];
-    const sizeButtons = availableSizes.map(([size, qty], idx) => 
+    const availableSizes = Object.entries(stockFromStorage).filter(([_, qty]) => qty > 0);
+    const sizeButtons = availableSizes.map(([size, qty], idx) =>
         `<button type="button" class="size-btn ${idx === 0 ? 'active' : ''}" data-size="${size}" data-stock="${qty}">${size}</button>`
     ).join('');
-    
+
     const firstSizeStock = availableSizes.length > 0 ? availableSizes[0][1] : 0;
     
     return `
@@ -273,8 +281,9 @@ function confirmMobileCartSheet() {
     const selectedQty = parseInt(qtyInput.value, 10);
     const product = mobileSheetProduct;
 
-    if (product.sizes[selectedSize] >= selectedQty) {
-        product.sizes[selectedSize] -= selectedQty;
+    const currentStock = getProductStock(product.id, selectedSize);
+    if (currentStock >= selectedQty) {
+        decreaseProductStock(product.id, selectedSize, selectedQty);
         addToLocalCart(product.id, product.name, selectedSize, selectedQty);
         showToast(`Added ${selectedQty} × "${product.name}" (${selectedSize}) to cart.`);
         closeMobileCartSheet();
@@ -785,13 +794,14 @@ window.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest(".btn-confirm-cart")) {
                 const activeSizeBtn = container.querySelector(".size-btn.active");
                 if (!activeSizeBtn) return;
-                
+
                 const selectedSize = activeSizeBtn.dataset.size;
                 const qtyInput = container.querySelector(".qty-input-flip");
                 const selectedQty = parseInt(qtyInput.value, 10);
-                
-                if (product.sizes[selectedSize] >= selectedQty) {
-                    product.sizes[selectedSize] -= selectedQty;
+
+                const currentStock = getProductStock(product.id, selectedSize);
+                if (currentStock >= selectedQty) {
+                    decreaseProductStock(product.id, selectedSize, selectedQty);
                     addToLocalCart(product.id, product.name, selectedSize, selectedQty);
                     showToast(`Added ${selectedQty} × "${product.name}" (${selectedSize}) to cart.`);
                     renderGrid();
