@@ -62,7 +62,7 @@ function renderCart() {
 
         return `
             <div class="cart-item" data-id="${item.id}" data-size="${item.size}">
-                <img src="${product.image}" alt="${product.name}" class="cart-item-img">
+                <img src="${adjustImagePath(product.image)}" alt="${product.name}" class="cart-item-img">
                 <div class="cart-item-info">
                     <h3 class="cart-item-name">${product.name}</h3>
                     <p class="cart-item-details">Size: ${item.size} | Price: $${product.price.toFixed(2)}</p>

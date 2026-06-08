@@ -62,7 +62,7 @@ async function loadSeasonalProducts() {
             <a href="content/product-details.html?id=${product.id}" class="slider-card">
                 <div class="slider-card-image">
                     <img 
-                        src="${product.image}" 
+                        src="${adjustImagePath(product.image)}" 
                         alt="${product.name}" 
                         onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'"
                     >

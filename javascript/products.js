@@ -46,7 +46,7 @@ function renderCard(product) {
             <div class="product-image-wrap">
               <div class="product-image">
                 <img
-                  src="${product.image}"
+                  src="${adjustImagePath(product.image)}"
                   alt="${product.name}"
                   loading="lazy"
                   onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'"

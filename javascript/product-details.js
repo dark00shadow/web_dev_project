@@ -68,7 +68,7 @@ function renderProductDetails(product) {
 
     container.innerHTML = `
         <div class="details-image-section">
-            <img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'">
+            <img src="${adjustImagePath(product.image)}" alt="${product.name}" onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'">
         </div>
         <div class="details-info-section">
             <h1 class="details-title">${product.name}</h1>
@@ -132,7 +132,7 @@ function initSliderSection(sectionId, wrapperId, products) {
     const productHTML = products.map(product => `
         <a href="product-details.html?id=${product.id}" class="slider-card">
             <div class="slider-card-image">
-                <img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'">
+                <img src="${adjustImagePath(product.image)}" alt="${product.name}" onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'">
             </div>
             <div class="slider-card-body">
                 <span class="slider-card-category">${product.category}</span>

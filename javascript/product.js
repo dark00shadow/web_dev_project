@@ -26,7 +26,7 @@ function renderCard(product) {
           <article class="product-card product-card-front" data-season="${product.season}" data-category="${product.category}">
             <div class="product-image">
               <img
-                src="${product.image}"
+                src="${adjustImagePath(product.image)}"
                 alt="${product.name}"
                 onerror="this.parentElement.innerHTML='${seasonIcon(product.season)}'"
               >

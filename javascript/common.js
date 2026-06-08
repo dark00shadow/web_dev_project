@@ -61,6 +61,27 @@ function decreaseProductStock(productId, size, quantity) {
 }
 
 /**
+ * Adjust image path based on current page location
+ * Returns the correct image path for the current context
+ */
+function adjustImagePath(imagePath) {
+  if (!imagePath) return imagePath;
+
+  const pathname = window.location.pathname;
+  const isHomepage = pathname.endsWith('index.html') || pathname === '/' || !pathname.includes('/content/');
+
+  let finalImgSrc = imagePath;
+
+  if (isHomepage && finalImgSrc.startsWith('../')) {
+    finalImgSrc = finalImgSrc.replace('../', '');
+  } else if (!isHomepage && !finalImgSrc.startsWith('../') && !finalImgSrc.startsWith('/')) {
+    finalImgSrc = '../' + finalImgSrc;
+  }
+
+  return finalImgSrc;
+}
+
+/**
  * Opens a centered popup window
  * On mobile devices (<= 600px), it navigates in the same window instead.
  */
